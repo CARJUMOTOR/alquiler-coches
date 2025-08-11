@@ -1,196 +1,359 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alquiler de Coches</title>
-    <style>
-        :root {
-            --color-principal: #ff6600;
-            --color-secundario: #e65c00;
-            --color-fondo: #f4f4f4;
-            --color-texto: #333;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            background: var(--color-fondo);
-            color: var(--color-texto);
-        }
-        header {
-            background: var(--color-principal);
-            color: white;
-            padding: 1.5rem;
-            text-align: center;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-        }
-        header h1 {
-            margin: 0;
-            font-size: 2rem;
-        }
-        header p {
-            margin: 0.5rem 0 0;
-        }
-        .container {
-            max-width: 1100px;
-            margin: auto;
-            padding: 1rem;
-        }
-        .filtros {
-            background: white;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            flex-wrap: wrap;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .filtros label {
-            flex: 1 1 200px;
-        }
-        input[type="date"] {
-            padding: 0.4rem;
-            width: 100%;
-        }
-        button {
-            background: var(--color-principal);
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: 0.2s;
-        }
-        button:hover {
-            background: var(--color-secundario);
-        }
-        .coches {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.5rem;
-        }
-        .coche {
-            background: white;
-            padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .coche img {
-            width: 100%;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-        }
-        .coche h3 {
-            margin: 0.3rem 0;
-        }
-        .precio {
-            font-size: 1.1rem;
-            color: var(--color-principal);
-            font-weight: bold;
-        }
-        footer {
-            text-align: center;
-            padding: 1rem;
-            background: white;
-            margin-top: 2rem;
-            font-size: 0.9rem;
-            color: #666;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
-        }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Carjumotor - Alquiler de Turismos</title>
+<style>
+  :root{
+    --navy:#0b2340;
+    --yellow:#ffd100;
+    --white:#ffffff;
+    --muted:#6b7280;
+    --card-shadow: 0 6px 18px rgba(11,35,64,0.08);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter, "Segoe UI", Roboto, Arial, sans-serif;background:linear-gradient(180deg, #f7f9fb 0%, #ffffff 100%);color:var(--navy)}
+  header{background:var(--navy);color:var(--white);padding:26px 16px;text-align:center}
+  header h1{margin:0;font-size:28px;letter-spacing:0.2px}
+  header p{margin:6px 0 0;opacity:0.9}
+  .container{max-width:1100px;margin:26px auto;padding:0 16px}
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+  .company{
+    display:flex;gap:12px;align-items:center;
+  }
+  .logo{
+    width:64px;height:64px;border-radius:8px;background:var(--yellow);display:flex;align-items:center;justify-content:center;color:var(--navy);font-weight:700;font-size:18px;box-shadow:var(--card-shadow)
+  }
+  .contact{color:var(--white);font-weight:600}
+  nav{display:flex;gap:12px;align-items:center}
+  nav a{color:var(--white);text-decoration:none;padding:8px 12px;border-radius:6px;font-weight:600;background:transparent}
+  .hero{
+    background:linear-gradient(90deg, rgba(11,35,64,0.95), rgba(11,35,64,0.85));
+    color:var(--white);padding:20px;border-radius:10px;box-shadow:var(--card-shadow);
+    display:flex;gap:18px;align-items:center;margin-bottom:20px;
+  }
+  .hero .left{flex:1}
+  .hero h2{margin:0 0 8px}
+  .hero p{margin:0;opacity:0.95}
+  .hero .cta{margin-top:12px}
+  .btn{background:var(--yellow);color:var(--navy);border:none;padding:10px 16px;border-radius:8px;font-weight:700;cursor:pointer}
+  .filters{background:var(--white);padding:14px;border-radius:10px;box-shadow:var(--card-shadow);display:flex;gap:12px;align-items:center;margin-bottom:18px;flex-wrap:wrap}
+  .filters label{display:flex;flex-direction:column;font-size:13px;color:var(--muted)}
+  input[type="date"], select, input[type="text"], input[type="email"], input[type="tel"]{
+    padding:8px 10px;border-radius:8px;border:1px solid #e6e9ee;font-size:14px;margin-top:6px;width:220px;
+  }
+  .coches{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+  .card{background:var(--white);padding:12px;border-radius:10px;box-shadow:var(--card-shadow);display:flex;flex-direction:column;justify-content:space-between}
+  .thumb{position:relative;border-radius:8px;overflow:hidden}
+  .thumb img{width:100%;height:170px;object-fit:cover;display:block}
+  .eco-badge{position:absolute;left:10px;top:10px;background:rgba(34,197,94,0.95);color:white;padding:6px 8px;border-radius:6px;font-weight:700;font-size:12px}
+  .card h3{margin:10px 0 6px}
+  .meta{display:flex;justify-content:space-between;align-items:center}
+  .price{color:var(--navy);font-weight:800}
+  .subtle{color:var(--muted);font-size:13px}
+  .card button{margin-top:12px;padding:10px;border-radius:8px;border:none;cursor:pointer;font-weight:700}
+  .reserve-btn{background:var(--navy);color:var(--white)}
+  .full-btn{background:#ddd;color:#888;cursor:not-allowed}
+  footer{margin-top:26px;padding:18px 0;text-align:center;color:var(--muted);font-size:14px}
+  /* modal */
+  .modal-back{position:fixed;inset:0;background:rgba(2,6,23,0.5);display:none;align-items:center;justify-content:center;padding:18px;z-index:60}
+  .modal{background:var(--white);max-width:640px;width:100%;border-radius:10px;padding:18px;box-shadow:0 12px 40px rgba(2,6,23,0.2);position:relative}
+  .modal h4{margin:0 0 8px}
+  .modal .row{display:flex;gap:12px;flex-wrap:wrap}
+  .small{font-size:13px;color:var(--muted)}
+  .close-x{position:absolute;right:10px;top:8px;background:#eee;border-radius:6px;padding:6px;cursor:pointer}
+  .cond{background:#f8fafc;padding:10px;border-radius:8px;margin-top:10px;font-size:13px;color:#333;max-height:160px;overflow:auto}
+  @media (max-width:640px){
+    .filters input[type="date"], .filters label input{width:100%}
+  }
+</style>
 </head>
 <body>
 
 <header>
-    <h1>Alquiler de Coches</h1>
-    <p>Reserva fácilmente tu coche ideal</p>
+  <div style="max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="logo">CJ</div>
+      <div>
+        <div style="font-weight:800;font-size:18px">Carjumotor</div>
+        <div style="font-size:13px;opacity:0.9">calle Uruguay 2, Griñón Madrid 28971</div>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-weight:700">Tel: 696 911 964</div>
+      <div style="font-size:13px;opacity:0.9">Email: <a href="mailto:carjumotor@gmail.com" style="color:var(--yellow);text-decoration:none;">carjumotor@gmail.com</a></div>
+    </div>
+  </div>
 </header>
 
-<div class="container">
-    <div class="filtros">
-        <label>
-            Fecha inicio:
-            <input type="date" id="fechaInicio">
-        </label>
-        <label>
-            Fecha fin:
-            <input type="date" id="fechaFin">
-        </label>
-        <button onclick="filtrar()">Buscar</button>
+<main class="container">
+  <section class="hero" aria-hidden="false">
+    <div class="left">
+      <h2>Alquiler de Turismos en Griñón</h2>
+      <p>Reserva tu coche rápido y seguro. Elige fechas y modelo — disponibilidad en tiempo real (simulado).</p>
+      <div class="cta"><button class="btn" onclick="document.getElementById('start').scrollIntoView({behavior:'smooth'})">Reservar ahora</button></div>
     </div>
+    <div style="width:240px;text-align:right">
+      <div style="background:var(--white);padding:10px;border-radius:8px;color:var(--navy);font-weight:700;box-shadow:var(--card-shadow)">
+        Precio ejemplo<br><span style="font-size:18px">Opel Corsa — 40 € + IVA / día</span>
+      </div>
+    </div>
+  </section>
 
-    <div id="coches" class="coches"></div>
+  <div id="start" class="filters" style="margin-top:18px">
+    <label>
+      Fecha inicio
+      <input type="date" id="fechaInicio" />
+    </label>
+    <label>
+      Fecha fin
+      <input type="date" id="fechaFin" />
+    </label>
+    <label>
+      Tipo
+      <select id="tipoVeh">
+        <option>Turismos</option>
+      </select>
+    </label>
+    <button class="btn" onclick="aplicarFiltro()">Buscar</button>
+  </div>
+
+  <section class="coches" id="cochesList">
+    <!-- Tarjetas cargadas por JS -->
+  </section>
+
+  <footer>
+    © 2025 Carjumotor — calle Uruguay 2, Griñón (Madrid) • Tel: 696911964 • carjumotor@gmail.com
+  </footer>
+</main>
+
+<!-- Modal Reserva -->
+<div class="modal-back" id="modalBack">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="close-x" onclick="cerrarModal()">✕</div>
+    <h4 id="modalTitle">Reservar: <span id="modalCar"></span></h4>
+    <div class="small" id="modalPrice"></div>
+
+    <div style="margin-top:12px">
+      <div class="row">
+        <label>Fecha inicio <input type="date" id="modalInicio"></label>
+        <label>Fecha fin <input type="date" id="modalFin"></label>
+      </div>
+
+      <div style="margin-top:10px" class="row">
+        <input type="text" id="modalName" placeholder="Nombre completo" style="width:100%" />
+        <input type="tel" id="modalPhone" placeholder="Teléfono" style="width:100%" />
+        <input type="email" id="modalEmail" placeholder="Email" style="width:100%" />
+      </div>
+
+      <div class="cond" id="condicionesBox">
+        <!-- Resumen de condiciones -->
+      </div>
+
+      <div style="margin-top:12px;display:flex;gap:10px;justify-content:flex-end">
+        <button onclick="confirmarReserva()" class="reserve-btn">Confirmar reserva</button>
+        <button onclick="cerrarModal()" style="background:#eee;border-radius:8px;padding:10px 12px">Cancelar</button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<footer>
-    &copy; 2025 Alquiler de Coches - Prototipo
-</footer>
-
 <script>
-    const coches = [
-        { id: 1, nombre: "Toyota Corolla", precio: 50, imagen: "https://via.placeholder.com/300x200?text=Toyota+Corolla", reservas: [{inicio: "2025-08-15", fin: "2025-08-20"}] },
-        { id: 2, nombre: "Ford Focus", precio: 45, imagen: "https://via.placeholder.com/300x200?text=Ford+Focus", reservas: [] },
-        { id: 3, nombre: "BMW Serie 3", precio: 90, imagen: "https://via.placeholder.com/300x200?text=BMW+Serie+3", reservas: [{inicio: "2025-08-10", fin: "2025-08-12"}] },
-        { id: 4, nombre: "Audi A4", precio: 100, imagen: "https://via.placeholder.com/300x200?text=Audi+A4", reservas: [] }
-    ];
+/* Datos de la flota según tus instrucciones.
+   - Opel Corsa: disponible (precio 40€ + IVA)
+   - Resto 3 modelos: fotos de ejemplo, siempre completos.
+*/
+const iva = 0.21;
+const coches = [
+  {
+    id: 'corsa',
+    nombre: 'Opel Corsa 100 cv - Gasolina Hybrid',
+    precio: 40, // €/día sin IVA
+    imagen: 'https://images.unsplash.com/photo-1542367597-7d8e0de6b3b6?auto=format&fit=crop&w=1000&q=60',
+    eco: true,
+    disponible: true,
+    reservas: [] // se guardarán aquí (y en localStorage)
+  },
+  {
+    id: 'seat',
+    nombre: 'Seat Ibiza 95 cv - Gasolina',
+    precio: 35,
+    imagen: 'https://images.unsplash.com/photo-1511910849309-7f0b2e0a4f84?auto=format&fit=crop&w=1000&q=60',
+    eco: false,
+    disponible: false,
+    reservas: [{inicio:'2025-01-01',fin:'2026-12-31'}] // lleno
+  },
+  {
+    id: 'renault',
+    nombre: 'Renault Clio 90 cv - Gasolina',
+    precio: 38,
+    imagen: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1000&q=60',
+    eco: false,
+    disponible: false,
+    reservas: [{inicio:'2025-01-01',fin:'2026-12-31'}]
+  },
+  {
+    id: 'toyota',
+    nombre: 'Toyota Yaris 100 cv - Híbrido',
+    precio: 45,
+    imagen: 'https://images.unsplash.com/photo-1549921296-3a5b1b2e6e9d?auto=format&fit=crop&w=1000&q=60',
+    eco: false,
+    disponible: false,
+    reservas: [{inicio:'2025-01-01',fin:'2026-12-31'}]
+  }
+];
 
-    function mostrarCoches(lista, fechaInicio, fechaFin) {
-        const contenedor = document.getElementById("coches");
-        contenedor.innerHTML = "";
-        lista.forEach(coche => {
-            const dias = calcularDias(fechaInicio, fechaFin);
-            const precioTotal = dias > 0 ? coche.precio * dias : 0;
-            contenedor.innerHTML += `
-                <div class="coche">
-                    <div>
-                        <img src="${coche.imagen}" alt="${coche.nombre}">
-                        <h3>${coche.nombre}</h3>
-                        <p class="precio">Precio por día: $${coche.precio}</p>
-                        <p>Precio total (${dias} días): $${precioTotal}</p>
-                    </div>
-                    <button onclick="reservar('${coche.nombre}', ${precioTotal}, '${fechaInicio}', '${fechaFin}')">Reservar</button>
-                </div>
-            `;
-        });
+// Cargar reservas guardadas en localStorage (simula backend)
+const stored = localStorage.getItem('carjumotor_reservas_v1');
+if(stored){
+  try{
+    const loaded = JSON.parse(stored);
+    // merge into coches[0] (opel) reservas
+    const corsa = coches.find(c=>c.id==='corsa');
+    if(corsa){
+      corsa.reservas = corsa.reservas.concat(loaded);
     }
+  }catch(e){ console.warn('No se pudo cargar reservas locales',e) }
+}
 
-    function filtrar() {
-        const inicio = document.getElementById("fechaInicio").value;
-        const fin = document.getElementById("fechaFin").value;
+function diasEntre(inicio, fin){
+  const i = new Date(inicio);
+  const f = new Date(fin);
+  const diff = (f - i) / (1000*60*60*24);
+  return diff>0 ? Math.round(diff) : 0;
+}
 
-        if (!inicio || !fin) {
-            alert("Por favor, selecciona fechas.");
-            return;
-        }
-
-        const filtrados = coches.filter(coche => {
-            return coche.reservas.every(r => fin < r.inicio || inicio > r.fin);
-        });
-
-        mostrarCoches(filtrados, inicio, fin);
+function mostrarCoches(lista){
+  const cont = document.getElementById('cochesList');
+  cont.innerHTML = '';
+  lista.forEach(c=>{
+    const card = document.createElement('article');
+    card.className = 'card';
+    card.innerHTML = `
+      <div>
+        <div class="thumb">
+          <img src="${c.imagen}" alt="${c.nombre}" />
+          ${c.eco ? '<div class="eco-badge">ECO</div>' : ''}
+        </div>
+        <h3>${c.nombre}</h3>
+        <div class="meta">
+          <div class="subtle">Desde</div>
+          <div class="price">${c.precio} € / día</div>
+        </div>
+        <div class="subtle" style="margin-top:6px">IVA no incluido</div>
+      </div>
+      <div>
+        <button id="btn-${c.id}" class="${c.disponible ? 'reserve-btn' : 'full-btn'}" ${c.disponible ? '' : 'disabled'}>
+          ${c.disponible ? 'Reservar' : 'COMPLETO'}
+        </button>
+      </div>
+    `;
+    cont.appendChild(card);
+    // listeners
+    const btn = card.querySelector('button');
+    if(c.disponible){
+      btn.addEventListener('click',()=>abrirModal(c));
+    }else{
+      btn.addEventListener('click',()=>alert('Lo sentimos, este modelo está completo para las fechas seleccionadas.'));
     }
+  });
+}
 
-    function calcularDias(fechaInicio, fechaFin) {
-        const inicio = new Date(fechaInicio);
-        const fin = new Date(fechaFin);
-        const diff = (fin - inicio) / (1000 * 60 * 60 * 24);
-        return diff > 0 ? diff : 0;
-    }
+// Inicial: mostrar todos
+mostrarCoches(coches);
 
-    function reservar(nombre, precioTotal, fechaInicio, fechaFin) {
-        const cliente = prompt(`Reservando ${nombre}.\nPrecio total: $${precioTotal}\n\nIntroduce tu nombre:`);
-        if (cliente) {
-            alert(`✅ Reserva confirmada para ${cliente}:\n${nombre} del ${fechaInicio} al ${fechaFin}\nTotal: $${precioTotal}`);
-        }
-    }
+// Filtrar por fechas: para este prototipo solo habilita/deshabilita
+function aplicarFiltro(){
+  const inicio = document.getElementById('fechaInicio').value;
+  const fin = document.getElementById('fechaFin').value;
+  if(!inicio || !fin){ alert('Selecciona fecha inicio y fin.'); return; }
+  if(new Date(fin) <= new Date(inicio)){ alert('La fecha fin debe ser posterior a la de inicio.'); return; }
+  // Para coches no disponibles: siempre completo.
+  // Para Opel: comprobar solapamiento con sus reservas.
+  const lista = coches.map(c=>{
+    if(c.id!=='corsa') return {...c, disponible:false};
+    // comprobar reservas del corsa
+    const overlap = c.reservas.some(r=>{
+      return !(fin < r.inicio || inicio > r.fin);
+    });
+    return {...c, disponible: !overlap};
+  });
+  mostrarCoches(lista);
+}
 
-    mostrarCoches(coches, "", "");
+/* Modal de reserva */
+let activeCar = null;
+function abrirModal(car){
+  activeCar = car;
+  document.getElementById('modalCar').textContent = car.nombre;
+  document.getElementById('modalPrice').textContent = `${car.precio} € / día (+ IVA ${Math.round(iva*100)}%)`;
+  // rellenar fechas si el usuario ya puso filtro
+  const fi = document.getElementById('fechaInicio').value;
+  const ff = document.getElementById('fechaFin').value;
+  document.getElementById('modalInicio').value = fi || '';
+  document.getElementById('modalFin').value = ff || '';
+  document.getElementById('modalName').value = '';
+  document.getElementById('modalPhone').value = '';
+  document.getElementById('modalEmail').value = '';
+  // condiciones resumen (basado en Condiciones Generales de Iberfurgo, enlace en footer)
+  document.getElementById('condicionesBox').innerHTML = `
+    <strong>Condiciones (resumen):</strong>
+    <ul style="margin:6px 0 0 18px;padding:0;color:#333">
+      <li>El precio se abonará por anticipado y se aplicarán impuestos correspondientes.</li>
+      <li>El arrendatario debe presentar permiso de conducir válido y responder por el buen uso del vehículo.</li>
+      <li>La entrega y devolución se realizan en la oficina indicada; posibles costes por entregas fuera de lugar.</li>
+      <li>La finalización anticipada del contrato puede implicar ajustes en el precio conforme a tarifas.</li>
+    </ul>
+    <div style="margin-top:8px;font-size:13px">Para leer las condiciones completas consulta: <a href="https://www.iberfurgo.com/condiciones-generales-de-contratacion/" target="_blank" rel="noopener" style="color:var(--navy)">Condiciones Generales</a></div>
+  `;
+  document.getElementById('modalBack').style.display = 'flex';
+}
+
+function cerrarModal(){
+  document.getElementById('modalBack').style.display = 'none';
+  activeCar = null;
+}
+
+function confirmarReserva(){
+  if(!activeCar) return;
+  const inicio = document.getElementById('modalInicio').value;
+  const fin = document.getElementById('modalFin').value;
+  const name = document.getElementById('modalName').value.trim();
+  const phone = document.getElementById('modalPhone').value.trim();
+  const email = document.getElementById('modalEmail').value.trim();
+  if(!inicio || !fin || !name || !phone || !email){ alert('Por favor completa todos los campos.'); return; }
+  if(new Date(fin) <= new Date(inicio)){ alert('La fecha fin debe ser posterior a la de inicio.'); return; }
+  // comprobar disponibilidad final (solo corsa puede reservar)
+  const c = coches.find(x=>x.id===activeCar.id);
+  if(!c || !c.disponible){
+    alert('Lo sentimos, el vehículo no está disponible.');
+    cerrarModal(); return;
+  }
+  // comprobar solapamiento
+  const overlap = c.reservas.some(r=>{
+    return !(fin < r.inicio || inicio > r.fin);
+  });
+  if(overlap){ alert('Lo sentimos, ya existe una reserva en esas fechas.'); return; }
+  // calcular precio total
+  const dias = diasEntre(inicio, fin);
+  const subtotal = c.precio * dias;
+  const total = subtotal * (1 + iva);
+  // simular guardado
+  const nueva = { inicio, fin, nombre:name, telefono:phone, email:email, coche:c.id, total: total.toFixed(2) };
+  c.reservas.push({inicio,fin});
+  // guardar en localStorage (simula servidor)
+  let saved = [];
+  try{ saved = JSON.parse(localStorage.getItem('carjumotor_reservas_v1')||'[]'); }catch(e){ saved = [] }
+  saved.push({inicio,fin,nombre:name,telefono:phone,email:email,coche:c.id,total:total.toFixed(2)});
+  localStorage.setItem('carjumotor_reservas_v1', JSON.stringify(saved));
+  alert(`✅ Reserva confirmada:\n${c.nombre}\n${inicio} → ${fin}\nDías: ${dias}\nTotal (IVA incl.): ${total.toFixed(2)} €\n\nTe enviaremos confirmación por email a ${email} (simulado).`);
+  cerrarModal();
+  // actualizar vista: hacer que ahora aparezca como no disponible para las fechas seleccionadas si quieres
+  aplicarFiltro();
+}
+
+/* Inicial: si no filtras, mostramos todos y solo Opel se puede reservar */
 </script>
-
 </body>
 </html>
