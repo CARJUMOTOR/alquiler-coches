@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alquiler de Coches</title>
+    <style>
+        :root {
+            --color-principal: #ff6600;
+            --color-secundario: #e65c00;
+            --color-fondo: #f4f4f4;
+            --color-texto: #333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background: var(--color-fondo);
+            color: var(--color-texto);
+        }
+        header {
+            background: var(--color-principal);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        header p {
+            margin: 0.5rem 0 0;
+        }
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 1rem;
+        }
+        .filtros {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .filtros label {
+            flex: 1 1 200px;
+        }
+        input[type="date"] {
+            padding: 0.4rem;
+            width: 100%;
+        }
+        button {
+            background: var(--color-principal);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: var(--color-secundario);
+        }
+        .coches {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+        .coche {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .coche img {
+            width: 100%;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+        .coche h3 {
+            margin: 0.3rem 0;
+        }
+        .precio {
+            font-size: 1.1rem;
+            color: var(--color-principal);
+            font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: white;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #666;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Alquiler de Coches</h1>
+    <p>Reserva fácilmente tu coche ideal</p>
+</header>
+
+<div class="container">
+    <div class="filtros">
+        <label>
+            Fecha inicio:
+            <input type="date" id="fechaInicio">
+        </label>
+        <label>
+            Fecha fin:
+            <input type="date" id="fechaFin">
+        </label>
+        <button onclick="filtrar()">Buscar</button>
+    </div>
+
+    <div id="coches" class="coches"></div>
+</div>
+
+<footer>
+    &copy; 2025 Alquiler de Coches - Prototipo
+</footer>
+
+<script>
+    const coches = [
+        { id: 1, nombre: "Toyota Corolla", precio: 50, imagen: "https://via.placeholder.com/300x200?text=Toyota+Corolla", reservas: [{inicio: "2025-08-15", fin: "2025-08-20"}] },
+        { id: 2, nombre: "Ford Focus", precio: 45, imagen: "https://via.placeholder.com/300x200?text=Ford+Focus", reservas: [] },
+        { id: 3, nombre: "BMW Serie 3", precio: 90, imagen: "https://via.placeholder.com/300x200?text=BMW+Serie+3", reservas: [{inicio: "2025-08-10", fin: "2025-08-12"}] },
+        { id: 4, nombre: "Audi A4", precio: 100, imagen: "https://via.placeholder.com/300x200?text=Audi+A4", reservas: [] }
+    ];
+
+    function mostrarCoches(lista, fechaInicio, fechaFin) {
+        const contenedor = document.getElementById("coches");
+        contenedor.innerHTML = "";
+        lista.forEach(coche => {
+            const dias = calcularDias(fechaInicio, fechaFin);
+            const precioTotal = dias > 0 ? coche.precio * dias : 0;
+            contenedor.innerHTML += `
+                <div class="coche">
+                    <div>
+                        <img src="${coche.imagen}" alt="${coche.nombre}">
+                        <h3>${coche.nombre}</h3>
+                        <p class="precio">Precio por día: $${coche.precio}</p>
+                        <p>Precio total (${dias} días): $${precioTotal}</p>
+                    </div>
+                    <button onclick="reservar('${coche.nombre}', ${precioTotal}, '${fechaInicio}', '${fechaFin}')">Reservar</button>
+                </div>
+            `;
+        });
+    }
+
+    function filtrar() {
+        const inicio = document.getElementById("fechaInicio").value;
+        const fin = document.getElementById("fechaFin").value;
+
+        if (!inicio || !fin) {
+            alert("Por favor, selecciona fechas.");
+            return;
+        }
+
+        const filtrados = coches.filter(coche => {
+            return coche.reservas.every(r => fin < r.inicio || inicio > r.fin);
+        });
+
+        mostrarCoches(filtrados, inicio, fin);
+    }
+
+    function calcularDias(fechaInicio, fechaFin) {
+        const inicio = new Date(fechaInicio);
+        const fin = new Date(fechaFin);
+        const diff = (fin - inicio) / (1000 * 60 * 60 * 24);
+        return diff > 0 ? diff : 0;
+    }
+
+    function reservar(nombre, precioTotal, fechaInicio, fechaFin) {
+        const cliente = prompt(`Reservando ${nombre}.\nPrecio total: $${precioTotal}\n\nIntroduce tu nombre:`);
+        if (cliente) {
+            alert(`✅ Reserva confirmada para ${cliente}:\n${nombre} del ${fechaInicio} al ${fechaFin}\nTotal: $${precioTotal}`);
+        }
+    }
+
+    mostrarCoches(coches, "", "");
+</script>
+
+</body>
+</html>
