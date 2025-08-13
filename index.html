@@ -54,6 +54,13 @@
   .cond{background:#f8fafc;padding:10px;border-radius:8px;margin-top:10px;font-size:13px;color:#333;max-height:220px;overflow:auto}
   .fechas-box{background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:8px;padding:10px;margin-top:10px;color:var(--danger);font-weight:800}
   .fechas-box span{font-weight:800}
+
+  .reserved-dates { 
+    color: red; 
+    font-size: 12px; 
+    font-weight: bold; 
+  }
+
 </style>
 </head>
 <body>
@@ -74,7 +81,6 @@
     <nav>
       <a href="#inicio">Inicio</a>
       <a href="#nosotros">Nosotros</a>
-      <!-- Turismos eliminado -->
       <a href="#condiciones">Condiciones</a>
       <a href="#contacto">Contacto</a>
     </nav>
@@ -82,12 +88,11 @@
 </header>
 
 <main class="wrap">
-  <!-- INICIO -->
+  <!-- INICIO (sin títulos extra ni buscador/fechas) -->
   <section id="inicio">
     <div class="hero">
       <h2>Alquiler de turismos en Griñón</h2>
       <p class="small">Vehículos revisados, seguros y al mejor precio.</p>
-      <!-- Se han retirado: botón "Reservar ahora" y el desplegable de fechas -->
     </div>
 
     <!-- Flota en INICIO -->
@@ -95,19 +100,19 @@
     <div class="coches" id="cochesList"></div>
   </section>
 
-  <!-- NOSOTROS -->
+  <!-- NOSOTROS (solo texto descriptivo refundido) -->
   <section id="nosotros">
     <h3>Nosotros</h3>
     <div class="nosotros">
       <p>En Carjumotor somos especialistas en <strong>alquiler de turismos</strong> para particulares, autónomos y empresas. Contamos con años de profesionalidad y experiencia en el sector, lo que nos permite ofrecer un servicio ágil, transparente y adaptado a cada necesidad.</p>
-      <p>Nuestra prioridad es que disfrutes de la <strong>tranquilidad y la seguridad</strong> de un trabajo bien hecho. Por eso renovamos nuestra flota con frecuencia y seleccionamos modelos del mercado automovilístico que combinan eficiencia, comodidad y la mejor relación calidad-precio.</p>
+      <p>Nuestra prioridad es que disfrutes de la <strong>tranquilidad y la seguridad</strong> de un trabajo bien hecho. Por eso renovamos nuestra flota con frecuencia y seleccionamos modelos del mercado automovilístico que combinan eficiencia, comodidad y la mejor relación calidad‑precio.</p>
       <p>Disponemos de una <strong>amplia gama de coches</strong> (compactos, familiares y SUV) para distintos usos: escapadas de fin de semana, viajes de trabajo o desplazamientos urbanos. Si lo necesitas, te asesoramos para elegir el vehículo que mejor encaje con tu trayecto, equipaje y número de pasajeros.</p>
       <p>Además, ante cualquier imprevisto, tendrás acceso a <strong>asistencia en carretera 24/7</strong> durante todo el periodo de alquiler. Creemos en la transparencia: <strong>sin costes ocultos</strong>, condiciones claras y comunicación directa desde la reserva hasta la devolución.</p>
       <p>En Carjumotor trabajamos para que solo te preocupes de <strong>disfrutar del camino</strong>. Nuestro compromiso es ofrecerte una experiencia de alquiler sencilla, fiable y al precio justo.</p>
     </div>
   </section>
 
-  <!-- CONDICIONES -->
+  <!-- CONDICIONES (solo cláusulas) -->
   <section id="condiciones">
     <h3>Condiciones Generales de Alquiler</h3>
     <div class="small" style="background:#f8fafc;padding:10px;border-radius:8px">
@@ -123,7 +128,7 @@
     </div>
   </section>
 
-  <!-- CONTACTO -->
+  <!-- CONTACTO (dirección, teléfono, email y mapa) -->
   <section id="contacto">
     <h3>Contacto</h3>
     <p><strong>Dirección:</strong> Calle Uruguay 2, Griñón, Madrid 28971</p>
@@ -161,7 +166,7 @@
       <textarea name="observaciones" id="f_obs" placeholder="Observaciones (opcional)" style="width:100%" rows="3"></textarea>
 
       <div class="fechas-box" id="fechasNoDisp">
-        <span>Fechas no disponibles:</span> <!-- se rellena por JS -->
+        <span>Fechas no disponibles:</span>
       </div>
 
       <div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end">
@@ -179,13 +184,13 @@
 <script>
 /* ==== DATOS ==== */
 const coches = [
-  { id: 'corsa', nombre: 'Opel Corsa 100 CV - Gasolina Hybrid', precio: 40, imagen: 'img/opel_corsa.jpg', eco: true,  disponible: true  },
-  { id: 'leon',  nombre: 'Seat León TDI 110 CV - Diesel',        precio: 55, imagen: 'img/seat_leon.jpg',    eco: false, disponible: false },
-  { id: 'qashqai', nombre: 'Nissan Qashqai 130 CV - Gasolina',   precio: 65, imagen: 'img/nissan_qashqai.jpg', eco: false, disponible: false },
-  { id: 'passat', nombre: 'Volkswagen Passat 150 CV - Diesel',   precio: 70, imagen: 'img/vw_passat.jpg',    eco: false, disponible: false }
+  { id: 'corsa',   nombre: 'Opel Corsa 100 CV - Gasolina Hybrid', precio: 40, imagen: 'img/opel_corsa.jpg',      eco: true,  disponible: true  },
+  { id: 'leon',    nombre: 'Seat León TDI 110 CV - Diesel',        precio: 55, imagen: 'img/seat_leon.jpg',       eco: false, disponible: false },
+  { id: 'qashqai', nombre: 'Nissan Qashqai 130 CV - Gasolina',     precio: 65, imagen: 'img/nissan_qashqai.jpg',  eco: false, disponible: false },
+  { id: 'passat',  nombre: 'Volkswagen Passat 150 CV - Diesel',    precio: 70, imagen: 'img/vw_passat.jpg',       eco: false, disponible: false }
 ];
 
-/* Edita estas fechas según necesites (formato AAAA-MM-DD) */
+/* Fechas bloqueadas (edítalas como AAAA-MM-DD) */
 const fechasOcupadas = ["2025-08-14", "2025-08-15", "2025-08-20"];
 
 /* ==== PINTAR FLOTa EN INICIO ==== */
@@ -227,11 +232,11 @@ function abrirModal(car){
   document.getElementById('modalCar').textContent = car.nombre;
   document.getElementById('modalPrecio').textContent = car.precio;
 
-  // Vaciar fechas al abrir y bloquear las ocupadas
+  // Vaciar fechas al abrir
   document.getElementById('f_inicio').value = '';
   document.getElementById('f_fin').value = '';
 
-  // Si no existe el hidden del coche, lo creamos
+  // Hidden con coche
   if(!document.getElementById('hiddenCar')){
     const inp = document.createElement('input');
     inp.type='hidden'; inp.name='coche'; inp.id='hiddenCar'; inp.value=car.nombre;
@@ -240,11 +245,11 @@ function abrirModal(car){
     document.getElementById('hiddenCar').value = car.nombre;
   }
 
-  // Pintar recuadro de fechas no disponibles (en rojo y en negrita)
+  // Pintar recuadro de fechas no disponibles
   const box = document.getElementById('fechasNoDisp');
   box.innerHTML = `<span>Fechas no disponibles:</span> ${fechasOcupadas.map(f=>`<strong>${f}</strong>`).join(', ')}`;
 
-  // Añadir listeners para bloquear selección
+  // Bloquear fechas ocupadas
   bloquearFechas('f_inicio');
   bloquearFechas('f_fin');
 
@@ -255,7 +260,6 @@ function cerrarModal(){ document.getElementById('modalBack').style.display='none
 
 function bloquearFechas(idCampo) {
   const campo = document.getElementById(idCampo);
-  // si ya había listener, lo dejamos (navegadores modernos no duplican el mismo handler anónimo)
   campo.addEventListener("input", () => {
     if (fechasOcupadas.includes(campo.value)) {
       alert("Fecha no disponible");
@@ -286,4 +290,3 @@ function validarYEnviar(e){
 
 </body>
 </html>
-
