@@ -13,14 +13,17 @@
   nav {margin-top:8px; display:flex; gap:14px; flex-wrap:wrap; font-weight:bold;}
   nav a {cursor:pointer;}
   nav a:hover {color:#c28c00;}
-  section {display:none; margin:20px 0;}
-  section.active {display:block;}
+  section {margin:20px 0;}
   .nosotros p {text-align:justify; line-height:1.6;}
   .coches {display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:16px;}
   .card {background:#fff; border-radius:8px; padding:10px; box-shadow:0 4px 12px rgba(0,0,0,0.08);}
   .thumb img {width:100%; height:170px; object-fit:cover; border-radius:6px;}
+  .reserve-btn {background:#0b2340; color:#fff; border:none; padding:10px; border-radius:6px; cursor:pointer; font-weight:bold;}
   footer {text-align:center; padding:12px; font-size:14px; color:#555;}
-  input:disabled {background:#fdd; cursor:not-allowed;}
+  .modal-back {position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center;}
+  .modal {background:#fff; padding:20px; border-radius:8px; width:90%; max-width:500px; position:relative;}
+  .close-x {position:absolute; top:8px; right:8px; cursor:pointer; background:#eee; border-radius:50%; padding:4px 8px;}
+  .fechas-no-disponibles {background:#ffe5e5; color:red; padding:8px; border-radius:6px; margin-top:10px; font-weight:bold;}
 </style>
 </head>
 <body>
@@ -39,44 +42,68 @@
 </header>
 
 <main class="wrap">
-  <section id="inicio" class="active">
+  <section id="inicio" class="seccion">
     <h2>Alquiler de turismos en Griñón</h2>
     <p>Vehículos revisados, seguros y al mejor precio.</p>
-    <label>Fecha inicio: <input type="date" id="fechaInicio"></label>
-    <label>Fecha fin: <input type="date" id="fechaFin"></label>
+    <div class="coches">
+      <div class="card">
+        <div class="thumb"><img src="img/opel_corsa.jpg" alt="Opel Corsa"></div>
+        <h3>Opel Corsa 100 CV - Gasolina Hybrid</h3>
+        <button class="reserve-btn" onclick="abrirModal('Opel Corsa')">Reservar</button>
+      </div>
+      <div class="card">
+        <div class="thumb"><img src="img/seat_leon.jpg" alt="Seat León"></div>
+        <h3>Seat León TDI 110 CV - Diesel</h3>
+        <button class="reserve-btn" onclick="abrirModal('Seat León')">Reservar</button>
+      </div>
+      <div class="card">
+        <div class="thumb"><img src="img/nissan_qashqai.jpg" alt="Nissan Qashqai"></div>
+        <h3>Nissan Qashqai 130 CV - Gasolina</h3>
+        <button class="reserve-btn" onclick="abrirModal('Nissan Qashqai')">Reservar</button>
+      </div>
+      <div class="card">
+        <div class="thumb"><img src="img/vw_passat.jpg" alt="Volkswagen Passat"></div>
+        <h3>Volkswagen Passat 150 CV - Diesel</h3>
+        <button class="reserve-btn" onclick="abrirModal('Volkswagen Passat')">Reservar</button>
+      </div>
+    </div>
   </section>
 
-  <section id="nosotros">
-    <h2>Nosotros</h2>
-    <p>En Carjumotor nos apasiona ofrecer soluciones de movilidad seguras, rápidas y asequibles. Con más de 15 años de experiencia en el sector, combinamos nuestro conocimiento técnico con un trato cercano para que cada cliente se sienta respaldado en todo momento.</p>
-    <p>Nuestra flota está compuesta por vehículos modernos, revisados de forma periódica y equipados para garantizar el máximo confort y seguridad. Ya sea para un desplazamiento puntual, un viaje de negocios o unas vacaciones, tenemos la opción que mejor se adapta a ti.</p>
-    <p>Ofrecemos recogida y entrega en oficina, planes flexibles para empresas y particulares, y atención personalizada durante todo el alquiler. Nuestro objetivo es que solo tengas que preocuparte de disfrutar del camino.</p>
-    <p>Además, contamos con un equipo de profesionales siempre dispuesto a ayudarte a encontrar la mejor solución para tus necesidades. Creemos en la transparencia, por eso no tenemos costes ocultos y toda la información sobre el alquiler está disponible antes de formalizar la reserva.</p>
-  </section>
-
-  <section id="turismos">
+  <section id="turismos" class="seccion" style="display:none;">
     <h2>Turismos disponibles</h2>
     <div class="coches">
       <div class="card">
         <div class="thumb"><img src="img/opel_corsa.jpg" alt="Opel Corsa"></div>
         <h3>Opel Corsa 100 CV - Gasolina Hybrid</h3>
+        <button class="reserve-btn" onclick="abrirModal('Opel Corsa')">Reservar</button>
       </div>
       <div class="card">
         <div class="thumb"><img src="img/seat_leon.jpg" alt="Seat León"></div>
         <h3>Seat León TDI 110 CV - Diesel</h3>
+        <button class="reserve-btn" onclick="abrirModal('Seat León')">Reservar</button>
       </div>
       <div class="card">
         <div class="thumb"><img src="img/nissan_qashqai.jpg" alt="Nissan Qashqai"></div>
         <h3>Nissan Qashqai 130 CV - Gasolina</h3>
+        <button class="reserve-btn" onclick="abrirModal('Nissan Qashqai')">Reservar</button>
       </div>
       <div class="card">
         <div class="thumb"><img src="img/vw_passat.jpg" alt="Volkswagen Passat"></div>
         <h3>Volkswagen Passat 150 CV - Diesel</h3>
+        <button class="reserve-btn" onclick="abrirModal('Volkswagen Passat')">Reservar</button>
       </div>
     </div>
   </section>
 
-  <section id="condiciones">
+  <section id="nosotros" class="seccion" style="display:none;">
+    <h2>Nosotros</h2>
+    <p>En Carjumotor nos apasiona ofrecer soluciones de movilidad seguras, rápidas y asequibles. Con más de 15 años de experiencia en el sector, combinamos nuestro conocimiento técnico con un trato cercano para que cada cliente se sienta respaldado en todo momento.</p>
+    <p>Nuestra flota está compuesta por vehículos modernos, revisados de forma periódica y equipados para garantizar el máximo confort y seguridad. Ya sea para un desplazamiento puntual, un viaje de negocios o unas vacaciones, tenemos la opción que mejor se adapta a ti.</p>
+    <p>Ofrecemos recogida y entrega en oficina, planes flexibles para empresas y particulares, y atención personalizada durante todo el alquiler. Nuestro objetivo es que solo tengas que preocuparte de disfrutar del camino.</p>
+    <p>Además, creemos en la transparencia total: sin costes ocultos, condiciones claras y un servicio postalquiler siempre disponible para cualquier consulta o incidencia.</p>
+  </section>
+
+  <section id="condiciones" class="seccion" style="display:none;">
     <h2>Condiciones Generales de Alquiler</h2>
     <ul>
       <li>Límite de 200 km diarios. Exceso por kilómetro: 0,25 céntimos.</li>
@@ -87,7 +114,7 @@
     </ul>
   </section>
 
-  <section id="contacto">
+  <section id="contacto" class="seccion" style="display:none;">
     <h2>Contacto</h2>
     <p>Dirección: Calle Uruguay 2, Griñón, Madrid 28971</p>
     <p>Teléfono: 696 911 964 / 918 149 116</p>
@@ -100,9 +127,37 @@
   © 2025 Carjumotor — Todos los derechos reservados.
 </footer>
 
+<!-- Modal reserva -->
+<div class="modal-back" id="modalBack">
+  <div class="modal">
+    <div class="close-x" onclick="cerrarModal()">✕</div>
+    <h4 id="modalTitle"></h4>
+    <label>Fecha inicio: <input type="date" id="fechaInicio"></label>
+    <label>Fecha fin: <input type="date" id="fechaFin"></label>
+    <div id="fechasBloqueadas" class="fechas-no-disponibles"></div>
+    <button class="reserve-btn" style="margin-top:10px;">Enviar reserva</button>
+  </div>
+</div>
+
 <script>
-// Fechas bloqueadas manualmente
 const fechasOcupadas = ["2025-08-14", "2025-08-15", "2025-08-20"];
+
+function mostrarSeccion(id) {
+  document.querySelectorAll(".seccion").forEach(sec => sec.style.display = "none");
+  document.getElementById(id).style.display = "block";
+}
+
+function abrirModal(coche) {
+  document.getElementById("modalTitle").textContent = "Reservar: " + coche;
+  document.getElementById("fechasBloqueadas").innerHTML = "Fechas no disponibles: " + fechasOcupadas.join(", ");
+  bloquearFechas("fechaInicio");
+  bloquearFechas("fechaFin");
+  document.getElementById("modalBack").style.display = "flex";
+}
+
+function cerrarModal() {
+  document.getElementById("modalBack").style.display = "none";
+}
 
 function bloquearFechas(idCampo) {
   const campo = document.getElementById(idCampo);
@@ -112,27 +167,6 @@ function bloquearFechas(idCampo) {
       campo.value = "";
     }
   });
-  campo.addEventListener("click", () => {
-    const hoy = new Date();
-    const max = new Date(hoy.getFullYear()+1, hoy.getMonth(), hoy.getDate());
-    let dias = "";
-    for (let d = hoy; d <= max; d.setDate(d.getDate()+1)) {
-      const fechaStr = d.toISOString().split("T")[0];
-      if (fechasOcupadas.includes(fechaStr)) {
-        // Aquí podrías añadir estilo visual al datepicker (limitado en HTML nativo)
-      }
-    }
-  });
-}
-bloquearFechas("fechaInicio");
-bloquearFechas("fechaFin");
-
-// Mostrar solo sección seleccionada
-function mostrarSeccion(id) {
-  document.querySelectorAll("main section").forEach(sec => {
-    sec.classList.remove("active");
-  });
-  document.getElementById(id).classList.add("active");
 }
 </script>
 
