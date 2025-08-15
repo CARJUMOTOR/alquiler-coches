@@ -62,11 +62,7 @@
 
 <!-- EmailJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>
-(function(){
-   emailjs.init("HajgaxooQYQn08xO1"); // tu PUBLIC KEY
-})();
-</script>
+
 
 </head>
 <body>
@@ -214,156 +210,8 @@
   </div>
 </div>
 
-<script>
-/* ======== NAVEGACIÓN: mostrar solo la sección clicada ======== */
-const sections = ["inicio","nosotros","condiciones","contacto"];
-function showSection(id){
-  sections.forEach(s => {
-    const el = document.getElementById(s);
-    if(!el) return;
-    if(s === id){ el.classList.remove("hidden"); }
-    else { el.classList.add("hidden"); }
-  });
-  // Marcar enlace activo
-  document.querySelectorAll('nav a[data-section]').forEach(a=>{
-    a.classList.toggle('active', a.dataset.section === id);
-  });
-  // Actualizar hash
-  if(location.hash !== "#" + id){
-    history.pushState(null, "", "#" + id);
-  }
-}
-document.querySelectorAll('nav a[data-section]').forEach(a => {
-  a.addEventListener('click', (e)=>{
-    e.preventDefault();
-    showSection(a.dataset.section);
-  });
-});
-window.addEventListener('DOMContentLoaded', ()=>{
-  const initial = (location.hash || "#inicio").replace("#","");
-  showSection(sections.includes(initial) ? initial : "inicio");
-});
-window.addEventListener('hashchange', ()=>{
-  const id = (location.hash || "#inicio").replace("#","");
-  showSection(sections.includes(id) ? id : "inicio");
-});
 
-/* ======== FLOTa SOLO EN INICIO ======== */
-const coches = [
-  { id: 'corsa',   nombre: 'Opel Corsa 100 CV - Gasolina Hybrid', precio: 40, imagen: 'img/opel_corsa.jpg',      eco: true,  disponible: true  },
-  { id: 'leon',    nombre: 'Seat León TDI 110 CV - Diesel',        precio: 55, imagen: 'img/seat_leon.jpg',       eco: false, disponible: false },
-  { id: 'qashqai', nombre: 'Nissan Qashqai 130 CV - Gasolina',     precio: 65, imagen: 'img/nissan_qashqai.jpg',  eco: false, disponible: false },
-  { id: 'passat',  nombre: 'Volkswagen Passat 150 CV - Diesel',    precio: 70, imagen: 'img/vw_passat.jpg',       eco: false, disponible: false }
-];
 
-function pintarCoches(){
-  const cont = document.getElementById('cochesList');
-  cont.innerHTML = '';
-  coches.forEach(c=>{
-    const card = document.createElement('article');
-    card.className = 'card';
-    card.innerHTML = `
-      <div>
-        <div class="thumb">
-          <img src="${c.imagen}" alt="${c.nombre}" />
-          ${c.eco ? '<div class="eco-badge">ECO</div>' : ''}
-        </div>
-        <h3>${c.nombre}</h3>
-        <div class="meta"><div class="subtle">Desde</div><div class="price">${c.precio} € / día</div></div>
-        <div class="subtle" style="margin-top:6px">IVA no incluido</div>
-      </div>
-      <div>
-        <button id="btn-${c.id}" class="${c.disponible ? 'reserve-btn' : 'full-btn'}" ${c.disponible ? '' : 'disabled'}>
-          ${c.disponible ? 'Reservar' : 'COMPLETO'}
-        </button>
-      </div>
-    `;
-    cont.appendChild(card);
-    if(c.disponible){
-      document.getElementById(`btn-${c.id}`).addEventListener('click', ()=>abrirModal(c));
-    }
-  });
-}
-pintarCoches();
-
-/* ======== MODAL ======== */
-let activeCar = null;
-// Fechas bloqueadas (edita aquí, formato AAAA-MM-DD)
-const fechasOcupadas = ["2025-08-14","2025-08-15","2025-08-20"];
-
-function abrirModal(car){
-  activeCar = car;
-  document.getElementById('modalCar').textContent = car.nombre;
-  document.getElementById('modalPrecio').textContent = car.precio;
-
-  // Reset campos y pintar fechas no disponibles
-  document.getElementById('f_inicio').value = '';
-  document.getElementById('f_fin').value = '';
-
-  const box = document.getElementById('fechasNoDisp');
-  box.innerHTML = '<span>Fechas no disponibles:</span> ' + fechasOcupadas.map(f => `<strong>${f}</strong>`).join(', ');
-
-  // Campo oculto con el coche
-  if(!document.getElementById('hiddenCar')){
-    const inp = document.createElement('input');
-    inp.type='hidden'; inp.name='coche'; inp.id='hiddenCar'; inp.value=car.nombre;
-    document.getElementById('reservaForm').appendChild(inp);
-  } else {
-    document.getElementById('hiddenCar').value = car.nombre;
-  }
-
-  // Bloquear fechas ocupadas
-  bloquearFechas('f_inicio');
-  bloquearFechas('f_fin');
-
-  document.getElementById('modalBack').style.display = 'flex';
-}
-
-function cerrarModal(){ document.getElementById('modalBack').style.display='none'; activeCar=null; }
-
-function bloquearFechas(idCampo) {
-  const campo = document.getElementById(idCampo);
-  campo.addEventListener("input", () => {
-    if (fechasOcupadas.includes(campo.value)) {
-      alert("Fecha no disponible");
-      campo.value = "";
-    }
-  });
-}
-
-function validarYEnviar(e){
-  const fi = document.getElementById('f_inicio').value;
-  const ff = document.getElementById('f_fin').value;
-  const nombre = document.getElementById('f_nombre').value.trim();
-  const telefono = document.getElementById('f_telefono').value.trim();
-  const email = document.getElementById('f_email').value.trim();
-
-  if(!fi||!ff||!nombre||!telefono||!email){
-    alert('Completa todos los campos.');
-    e.preventDefault(); return false;
-  }
-  if(new Date(ff) <= new Date(fi)){
-    alert('La fecha fin debe ser posterior a la de inicio.');
-    e.preventDefault(); return false;
-  }
-
-  // Calcular días (incluyendo ambos extremos)
-  const dias = Math.ceil((new Date(ff) - new Date(fi)) / (1000*60*60*24)) + 1;
-  const precioBase = activeCar ? activeCar.precio : 0;
-  const precioSinIVA = dias * precioBase;
-  const precioConIVA = (precioSinIVA * 1.21).toFixed(2);
-
-  // Mostrar mensaje en el modal
-  document.getElementById('mensajeConfirmacion').innerHTML =
-    `Ha reservado los días <strong>${fi}</strong> al <strong>${ff}</strong>.<br>` +
-    `Precio final de la reserva con IVA incluido: <strong>${precioConIVA} €</strong>.<br>` +
-    `El pago se realizará en la oficina.`;
-
-  return true; // Se envía el formulario
-}
-</script>
-
-<noscript>Para navegar por secciones es necesario tener JavaScript activado.</noscript>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -378,10 +226,12 @@ document.addEventListener("DOMContentLoaded", function() {
     const fi       = document.getElementById('f_inicio').value;
     const ff       = document.getElementById('f_fin').value;
     const obs      = document.getElementById('f_obs').value.trim();
-    const coche    = document.getElementById('coche')?.value || "No indicado";
+    const coche    = document.getElementById('hiddenCar')?.value || "No indicado";
 
-    const dias = Math.max(1, Math.ceil((new Date(ff)-new Date(fi))/(1000*60*60*24)));
-    const precio = (dias * 45).toFixed(2) + " €"; // ajusta precio base
+    // Calcular días (incluyendo ambos extremos)
+    const dias = Math.ceil((new Date(ff) - new Date(fi)) / (1000*60*60*24)) + 1;
+    const precioBase = activeCar ? activeCar.precio : 40; // precio base por día (Opel Corsa)
+    const precioFinal = (dias * precioBase * 1.21).toFixed(2) + " €"; // con IVA
 
     const msg = document.getElementById("mensajeConfirmacion");
     msg.innerHTML = `⏳ Enviando...`;
@@ -390,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function() {
     emailjs.send("service_9uud3ei","template_wjryzug",{
       name: nombre, telefono, email,
       fechainicio: fi, fechafin: ff,
-      observaciones: obs, coche, precio
+      observaciones: obs, coche, precio: precioFinal
     }).then(()=>{
       msg.innerHTML = "✅ Reserva enviada a Carjumotor";
     }).catch((err)=>{
@@ -401,7 +251,7 @@ document.addEventListener("DOMContentLoaded", function() {
     emailjs.send("service_9uud3ei","template_ieuq4vc",{
       name: nombre, telefono, email,
       fechainicio: fi, fechafin: ff,
-      observaciones: obs, coche, precio
+      observaciones: obs, coche, precio: precioFinal
     }).then(()=>{
       msg.innerHTML += "<br>✅ Copia enviada al cliente";
     }).catch((err)=>{
