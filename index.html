@@ -335,7 +335,16 @@ function validarYEnviar(e){
     alert('La fecha fin debe ser posterior a la de inicio.');
     e.preventDefault(); return false;
   }
-  alert('Se va a enviar la solicitud de reserva.');
+
+  // Calcular días (incluyendo ambos extremos)
+  const dias = Math.ceil((new Date(ff) - new Date(fi)) / (1000*60*60*24)) + 1;
+  const precioBase = activeCar ? activeCar.precio : 0;
+  const precioSinIVA = dias * precioBase;
+  const precioConIVA = (precioSinIVA * 1.21).toFixed(2);
+
+  // Mostrar mensaje resumen
+  alert(`Ha reservado los días ${fi} al ${ff}. Precio final de la reserva con IVA incluido: ${precioConIVA} euros. El pago se realizará en la oficina.`);
+
   return true;
 }
 </script>
