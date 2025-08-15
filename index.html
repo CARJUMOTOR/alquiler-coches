@@ -59,15 +59,6 @@
   .fechas-box{background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:8px;padding:10px;margin-top:10px;color:var(--danger)}
   .fechas-box strong{color:var(--danger); font-size:12px; font-weight:700;} /* rojo pequeño para fechas */
 </style>
-
-<!-- SDK de EmailJS -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>
-  (function(){
-    emailjs.init("HajgaxooQYQn08xO1"); // Public Key
-  })();
-</script>
-
 </head>
 <body>
 
@@ -332,8 +323,6 @@ function bloquearFechas(idCampo) {
 }
 
 function validarYEnviar(e){
-  e.preventDefault(); // detener envío automático
-
   const fi = document.getElementById('f_inicio').value;
   const ff = document.getElementById('f_fin').value;
   const nombre = document.getElementById('f_nombre').value.trim();
@@ -342,11 +331,11 @@ function validarYEnviar(e){
 
   if(!fi||!ff||!nombre||!telefono||!email){
     alert('Completa todos los campos.');
-    return false;
+    e.preventDefault(); return false;
   }
   if(new Date(ff) <= new Date(fi)){
     alert('La fecha fin debe ser posterior a la de inicio.');
-    return false;
+    e.preventDefault(); return false;
   }
 
   // Calcular días (incluyendo ambos extremos)
@@ -361,36 +350,7 @@ function validarYEnviar(e){
     `Precio final de la reserva con IVA incluido: <strong>${precioConIVA} €</strong>.<br>` +
     `El pago se realizará en la oficina.`;
 
-  // Campo oculto para precio
-  let precioInput = document.getElementById('hiddenPrecio');
-  if(!precioInput){
-    precioInput = document.createElement('input');
-    precioInput.type = 'hidden';
-    precioInput.name = 'precio_total';
-    precioInput.id = 'hiddenPrecio';
-    document.getElementById('reservaForm').appendChild(precioInput);
-  }
-  precioInput.value = `${precioConIVA} €`;
-
-  if(confirm(`Precio final: ${precioConIVA} €
-Fechas: ${fi} a ${ff}
-
-¿Confirmar reserva?`)){
-    const formData = new FormData(e.target);
-    fetch(e.target.action, {
-      method: 'POST',
-      body: formData
-    }).then(response => {
-      if (response.ok) {
-        document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:green;">Reserva enviada correctamente. Te contactaremos por email.</span>';
-      } else {
-        document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:red;">Error al enviar la reserva. Intenta de nuevo.</span>';
-      }
-    }).catch(() => {
-      document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:red;">Error de conexión. Intenta más tarde.</span>';
-    });
-  }
-  return false;
+  return true; // Se envía el formulario
 }
 </script>
 
