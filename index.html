@@ -173,7 +173,7 @@
     <h4 id="modalTitle">Reservar: <span id="modalCar"></span></h4>
 
     <form
-    <input type="hidden" name="access_key" value="e7de18bb-25bb-410c-9e76-7bc8ccf84386">
+    <input type="hidden" name="access_key" value="e7de18bb-25bb-410c-9e76-7bc8ccf84386" id="reservaForm" onsubmit="validarYEnviar(event)">
     <input type="hidden" name="cc_email" id="hiddenCC">
  id="reservaForm" action="https://api.web3forms.com/submit" method="POST" onsubmit="return validarYEnviar(event)">
       <input type="hidden" name="_subject" value="Nueva reserva Carjumotor">
