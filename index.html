@@ -204,10 +204,10 @@
         <button type="button" onclick="cerrarModal()" style="background:#eee;border-radius:8px;padding:10px 12px">Cancelar</button>
       </div>
     
-<input type="hidden" name="access_key" value="e7de18bb-25bb-410c-9e76-7bc8ccf84386">
-<input type="hidden" name="cc_email" id="hiddenCC">
-<input type="hidden" name="message" id="hiddenMessage">
-<input type="hidden" name="precio_total" id="hiddenPrecio">
+
+
+
+
 
 </form>
 
@@ -383,7 +383,7 @@ Fechas: ${fi} a ${ff}
     const formData = new FormData(e.target);
 
     // Envío a ti
-    fetch("https://api.web3forms.com/submit", {
+    fetch("", {
       method: 'POST',
       body: formData
     }).then(res => res.json())
@@ -407,7 +407,7 @@ Fechas: ${fi} a ${ff}
             `Gracias por confiar en nosotros.`
           );
 
-          return fetch("https://api.web3forms.com/submit", {
+          return fetch("", {
             method: 'POST',
             body: formDataCliente
           });
