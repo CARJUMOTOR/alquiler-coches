@@ -47,8 +47,10 @@
   .map-wrap iframe{width:100%;height:320px;border:0;border-radius:8px}
   .nosotros p{color:#333;line-height:1.7;font-size:15px;margin-bottom:12px;text-align:justify}
   footer{margin-top:26px;padding:18px 0;text-align:center;color:var(--muted);font-size:14px}
+
   /* Mostrar solo la sección activa */
   .hidden{display:none}
+
   /* Modal */
   .modal-back{position:fixed;inset:0;background:rgba(2,6,23,0.5);display:none;align-items:center;justify-content:center;padding:18px;z-index:60}
   .modal{background:var(--white);max-width:640px;width:100%;border-radius:10px;padding:18px;box-shadow:0 12px 40px rgba(2,6,23,0.2);position:relative}
@@ -173,8 +175,6 @@
     <form id="reservaForm" action="https://formsubmit.co/carjumotor@gmail.com" method="POST" onsubmit="return validarYEnviar(event)">
       <input type="hidden" name="_subject" value="Nueva reserva Carjumotor">
       <input type="hidden" name="_captcha" value="false">
-      <!-- Campo oculto de precio para incluir en el email -->
-      <input type="hidden" name="precio_total" id="hiddenPrecio" value="">
 
       <label class="small">Fecha inicio
         <input type="date" name="fecha_inicio" id="f_inicio" required>
@@ -253,25 +253,25 @@ function pintarCoches(){
   coches.forEach(c=>{
     const card = document.createElement('article');
     card.className = 'card';
-    card.innerHTML = \`
+    card.innerHTML = `
       <div>
         <div class="thumb">
-          <img src="\${c.imagen}" alt="\${c.nombre}" />
-          \${c.eco ? '<div class="eco-badge">ECO</div>' : ''}
+          <img src="${c.imagen}" alt="${c.nombre}" />
+          ${c.eco ? '<div class="eco-badge">ECO</div>' : ''}
         </div>
-        <h3>\${c.nombre}</h3>
-        <div class="meta"><div class="subtle">Desde</div><div class="price">\${c.precio} € / día</div></div>
+        <h3>${c.nombre}</h3>
+        <div class="meta"><div class="subtle">Desde</div><div class="price">${c.precio} € / día</div></div>
         <div class="subtle" style="margin-top:6px">IVA no incluido</div>
       </div>
       <div>
-        <button id="btn-\${c.id}" class="\${c.disponible ? 'reserve-btn' : 'full-btn'}" \${c.disponible ? '' : 'disabled'}>
-          \${c.disponible ? 'Reservar' : 'COMPLETO'}
+        <button id="btn-${c.id}" class="${c.disponible ? 'reserve-btn' : 'full-btn'}" ${c.disponible ? '' : 'disabled'}>
+          ${c.disponible ? 'Reservar' : 'COMPLETO'}
         </button>
       </div>
-    \`;
+    `;
     cont.appendChild(card);
     if(c.disponible){
-      document.getElementById(\`btn-\${c.id}\`).addEventListener('click', ()=>abrirModal(c));
+      document.getElementById(`btn-${c.id}`).addEventListener('click', ()=>abrirModal(c));
     }
   });
 }
@@ -292,7 +292,7 @@ function abrirModal(car){
   document.getElementById('f_fin').value = '';
 
   const box = document.getElementById('fechasNoDisp');
-  box.innerHTML = '<span>Fechas no disponibles:</span> ' + fechasOcupadas.map(f => \`<strong>\${f}</strong>\`).join(', ');
+  box.innerHTML = '<span>Fechas no disponibles:</span> ' + fechasOcupadas.map(f => `<strong>${f}</strong>`).join(', ');
 
   // Campo oculto con el coche
   if(!document.getElementById('hiddenCar')){
@@ -322,7 +322,6 @@ function bloquearFechas(idCampo) {
   });
 }
 
-// *** MODIFICADO: mostrar resumen + confirmación y añadir precio al email ***
 function validarYEnviar(e){
   e.preventDefault(); // detener envío automático
 
@@ -349,19 +348,40 @@ function validarYEnviar(e){
 
   // Mostrar mensaje en el modal
   document.getElementById('mensajeConfirmacion').innerHTML =
-    \`Ha reservado los días <strong>\${fi}</strong> al <strong>\${ff}</strong>.<br>\` +
-    \`Precio final de la reserva con IVA incluido: <strong>\${precioConIVA} €</strong>.<br>\` +
-    \`El pago se realizará en la oficina.\`;
+    `Ha reservado los días <strong>${fi}</strong> al <strong>${ff}</strong>.<br>` +
+    `Precio final de la reserva con IVA incluido: <strong>${precioConIVA} €</strong>.<br>` +
+    `El pago se realizará en la oficina.`;
 
-  // Poner precio en campo oculto para que llegue al email
-  const precioInput = document.getElementById('hiddenPrecio');
-  precioInput.value = \`\${precioConIVA} €\`;
-
-  // Confirmar antes de enviar (el usuario puede leer el mensaje con calma)
-  if(confirm(\`Precio final: \${precioConIVA} €\nFechas: \${fi} a \${ff}\n\n¿Confirmar reserva?\`)){
-    e.target.submit(); // Enviar ahora sí
+  // Campo oculto para precio
+  let precioInput = document.getElementById('hiddenPrecio');
+  if(!precioInput){
+    precioInput = document.createElement('input');
+    precioInput.type = 'hidden';
+    precioInput.name = 'precio_total';
+    precioInput.id = 'hiddenPrecio';
+    document.getElementById('reservaForm').appendChild(precioInput);
   }
-  return false; // por si acaso, evitamos envío doble
+  precioInput.value = `${precioConIVA} €`;
+
+  if(confirm(`Precio final: ${precioConIVA} €
+Fechas: ${fi} a ${ff}
+
+¿Confirmar reserva?`)){
+    const formData = new FormData(e.target);
+    fetch(e.target.action, {
+      method: 'POST',
+      body: formData
+    }).then(response => {
+      if (response.ok) {
+        document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:green;">Reserva enviada correctamente. Te contactaremos por email.</span>';
+      } else {
+        document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:red;">Error al enviar la reserva. Intenta de nuevo.</span>';
+      }
+    }).catch(() => {
+      document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:red;">Error de conexión. Intenta más tarde.</span>';
+    });
+  }
+  return false;
 }
 </script>
 
