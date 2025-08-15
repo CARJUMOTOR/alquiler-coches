@@ -172,7 +172,8 @@
     <div class="close-x" onclick="cerrarModal()">✕</div>
     <h4 id="modalTitle">Reservar: <span id="modalCar"></span></h4>
 
-    <form id="reservaForm" action="https://formsubmit.co/carjumotor@gmail.com" method="POST" onsubmit="return validarYEnviar(event)">
+    <form>
+<input type="hidden" name="_next" value="https://carjumotor.github.io/alquiler-coches/"> id="reservaForm" action="https://formsubmit.co/carjumotor@gmail.com" method="POST" onsubmit="return validarYEnviar(event)">
       <input type="hidden" name="_subject" value="Nueva reserva Carjumotor">
       <input type="hidden" name="_captcha" value="false">
 
@@ -323,7 +324,7 @@ function bloquearFechas(idCampo) {
 }
 
 function validarYEnviar(e){
-  e.preventDefault(); // detener envío automático
+  e.preventDefault(); // detener envío automático para confirmar
 
   const fi = document.getElementById('f_inicio').value;
   const ff = document.getElementById('f_fin').value;
@@ -367,26 +368,7 @@ function validarYEnviar(e){
 Fechas: ${fi} a ${ff}
 
 ¿Confirmar reserva?`)){
-    const formData = new FormData(e.target);
-    // Asegurar campos ocultos que FormSubmit necesita
-    formData.append('_subject', 'Nueva reserva Carjumotor');
-    formData.append('_captcha', 'false');
-    formData.append('_template', 'table');
-
-    fetch("https://formsubmit.co/ajax/carjumotor@gmail.com", {
-      method: 'POST',
-      body: formData
-    }).then(res => res.json())
-      .then(data => {
-        if (data.success === 'true' || data.success === true) {
-          document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:green;">Reserva enviada correctamente. Te contactaremos por email.</span>';
-        } else {
-          document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:red;">Error al enviar la reserva. Intenta de nuevo.</span>';
-        }
-      })
-      .catch(() => {
-        document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:red;">Error de conexión. Intenta más tarde.</span>';
-      });
+    e.target.submit(); // envío normal
   }
   return false;
 }
