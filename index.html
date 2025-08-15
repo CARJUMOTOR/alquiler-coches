@@ -172,8 +172,7 @@
     <div class="close-x" onclick="cerrarModal()">✕</div>
     <h4 id="modalTitle">Reservar: <span id="modalCar"></span></h4>
 
-    <form>
-<input type="hidden" name="_next" value="https://carjumotor.github.io/alquiler-coches/"> id="reservaForm" action="https://formsubmit.co/carjumotor@gmail.com" method="POST" onsubmit="return validarYEnviar(event)">
+    <form id="reservaForm" action="https://formsubmit.co/carjumotor@gmail.com" method="POST" onsubmit="return validarYEnviar(event)">
       <input type="hidden" name="_subject" value="Nueva reserva Carjumotor">
       <input type="hidden" name="_captcha" value="false">
 
@@ -363,6 +362,17 @@ function validarYEnviar(e){
     document.getElementById('reservaForm').appendChild(precioInput);
   }
   precioInput.value = `${precioConIVA} €`;
+
+  // Campo oculto _cc para enviar copia al cliente
+  let ccInput = document.getElementById('hiddenCC');
+  if(!ccInput){
+    ccInput = document.createElement('input');
+    ccInput.type = 'hidden';
+    ccInput.name = '_cc';
+    ccInput.id = 'hiddenCC';
+    document.getElementById('reservaForm').appendChild(ccInput);
+  }
+  ccInput.value = email;
 
   if(confirm(`Precio final: ${precioConIVA} €
 Fechas: ${fi} a ${ff}
