@@ -172,7 +172,10 @@
     <div class="close-x" onclick="cerrarModal()">✕</div>
     <h4 id="modalTitle">Reservar: <span id="modalCar"></span></h4>
 
-    <form id="reservaForm" action="https://formsubmit.co/carjumotor@gmail.com" method="POST" onsubmit="return validarYEnviar(event)">
+    <form
+    <input type="hidden" name="access_key" value="e7de18bb-25bb-410c-9e76-7bc8ccf84386">
+    <input type="hidden" name="cc_email" id="hiddenCC">
+ id="reservaForm" action="https://api.web3forms.com/submit" method="POST" onsubmit="return validarYEnviar(event)">
       <input type="hidden" name="_subject" value="Nueva reserva Carjumotor">
       <input type="hidden" name="_captcha" value="false">
 
@@ -323,7 +326,7 @@ function bloquearFechas(idCampo) {
 }
 
 function validarYEnviar(e){
-  e.preventDefault(); // detener envío automático para confirmar
+  e.preventDefault(); // detener envío automático
 
   const fi = document.getElementById('f_inicio').value;
   const ff = document.getElementById('f_fin').value;
@@ -363,22 +366,28 @@ function validarYEnviar(e){
   }
   precioInput.value = `${precioConIVA} €`;
 
-  // Campo oculto _cc para enviar copia al cliente
-  let ccInput = document.getElementById('hiddenCC');
-  if(!ccInput){
-    ccInput = document.createElement('input');
-    ccInput.type = 'hidden';
-    ccInput.name = '_cc';
-    ccInput.id = 'hiddenCC';
-    document.getElementById('reservaForm').appendChild(ccInput);
-  }
-  ccInput.value = email;
+  // Campo oculto cc_email para enviar copia al cliente
+  document.getElementById('hiddenCC').value = email;
 
   if(confirm(`Precio final: ${precioConIVA} €
 Fechas: ${fi} a ${ff}
 
 ¿Confirmar reserva?`)){
-    e.target.submit(); // envío normal
+    const formData = new FormData(e.target);
+    fetch("https://api.web3forms.com/submit", {
+      method: 'POST',
+      body: formData
+    }).then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:green;">Reserva enviada correctamente. Te contactaremos por email.</span>';
+        } else {
+          document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:red;">Error al enviar la reserva. Intenta de nuevo.</span>';
+        }
+      })
+      .catch(() => {
+        document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:red;">Error de conexión. Intenta más tarde.</span>';
+      });
   }
   return false;
 }
