@@ -60,11 +60,10 @@
   .fechas-box strong{color:var(--danger); font-size:12px; font-weight:700;} /* rojo pequeño para fechas */
 </style>
 
-<!-- SDK de EmailJS -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="https://cdn.emailjs.com/sdk/3.11.0/email.min.js"></script>
 <script>
   (function(){
-    emailjs.init("HajgaxooQYQn08xO1"); // Public Key
+    emailjs.init("HajgaxooQYQn08xO1");
   })();
 </script>
 
@@ -204,7 +203,13 @@
         <button type="submit" class="reserve-btn">Enviar reserva</button>
         <button type="button" onclick="cerrarModal()" style="background:#eee;border-radius:8px;padding:10px 12px">Cancelar</button>
       </div>
-    </form>
+    
+
+
+
+
+
+</form>
 
     <div id="mensajeConfirmacion" style="margin-top:15px; font-size:14px; font-weight:600; color:#0b2340;"></div>
 
@@ -332,6 +337,8 @@ function bloquearFechas(idCampo) {
 }
 
 function validarYEnviar(e){
+  e.preventDefault();
+
   const fi = document.getElementById('f_inicio').value;
   const ff = document.getElementById('f_fin').value;
   const nombre = document.getElementById('f_nombre').value.trim();
@@ -340,26 +347,87 @@ function validarYEnviar(e){
 
   if(!fi||!ff||!nombre||!telefono||!email){
     alert('Completa todos los campos.');
-    e.preventDefault(); return false;
+    return false;
   }
   if(new Date(ff) <= new Date(fi)){
     alert('La fecha fin debe ser posterior a la de inicio.');
-    e.preventDefault(); return false;
+    return false;
   }
 
-  // Calcular días (incluyendo ambos extremos)
   const dias = Math.ceil((new Date(ff) - new Date(fi)) / (1000*60*60*24)) + 1;
   const precioBase = activeCar ? activeCar.precio : 0;
   const precioSinIVA = dias * precioBase;
   const precioConIVA = (precioSinIVA * 1.21).toFixed(2);
 
-  // Mostrar mensaje en el modal
   document.getElementById('mensajeConfirmacion').innerHTML =
     `Ha reservado los días <strong>${fi}</strong> al <strong>${ff}</strong>.<br>` +
     `Precio final de la reserva con IVA incluido: <strong>${precioConIVA} €</strong>.<br>` +
     `El pago se realizará en la oficina.`;
 
-  return true; // Se envía el formulario
+  document.getElementById('hiddenPrecio').value = `${precioConIVA} €`;
+  document.getElementById('hiddenMessage').value =
+    `Reserva de ${nombre}
+` +
+    `Fechas: ${fi} a ${ff}
+` +
+    `Teléfono: ${telefono}
+` +
+    `Email: ${email}
+` +
+    `Precio final: ${precioConIVA} €`;
+
+  if(confirm(`Precio final: ${precioConIVA} €
+Fechas: ${fi} a ${ff}
+
+¿Confirmar reserva?`)){
+    const formData = new FormData(e.target);
+
+    // Envío a ti
+    fetch("", {
+      method: 'POST',
+      body: formData
+    }).then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          // Envío al cliente
+          const formDataCliente = new FormData();
+          formDataCliente.append('access_key', 'e7de18bb-25bb-410c-9e76-7bc8ccf84386');
+          formDataCliente.append('name', nombre);
+          formDataCliente.append('email', email);
+          formDataCliente.append('message',
+            `Confirmación de tu reserva en Carjumotor
+
+` +
+            `Fechas: ${fi} a ${ff}
+` +
+            `Teléfono: ${telefono}
+` +
+            `Precio final: ${precioConIVA} €
+` +
+            `Gracias por confiar en nosotros.`
+          );
+
+          return fetch("", {
+            method: 'POST',
+            body: formDataCliente
+          });
+        } else {
+          throw new Error();
+        }
+      })
+      .then(res => res ? res.json() : null)
+      .then(dataCliente => {
+        if (!dataCliente || dataCliente.success) {
+          document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:green;">Reserva enviada correctamente. Te contactaremos por email.</span>';
+        } else {
+          document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:orange;">Reserva enviada, pero no se pudo enviar confirmación al cliente.</span>';
+        }
+      })
+      .catch(() => {
+        document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:red;">Error al enviar la reserva. Intenta de nuevo.</span>';
+      });
+  }
+  return false;
 }
 </script>
 
