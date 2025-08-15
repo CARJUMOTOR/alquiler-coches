@@ -172,10 +172,7 @@
     <div class="close-x" onclick="cerrarModal()">✕</div>
     <h4 id="modalTitle">Reservar: <span id="modalCar"></span></h4>
 
-    <form
-    <input type="hidden" name="access_key" value="e7de18bb-25bb-410c-9e76-7bc8ccf84386" id="reservaForm" onsubmit="validarYEnviar(event)">
-    <input type="hidden" name="cc_email" id="hiddenCC">
- id="reservaForm" action="https://api.web3forms.com/submit" method="POST" onsubmit="return validarYEnviar(event)">
+    <form id="reservaForm" action="https://api.web3forms.com/submit" method="POST" method="POST" onsubmit="return validarYEnviar(event)" id="reservaForm" onsubmit="validarYEnviar(event)">
       <input type="hidden" name="_subject" value="Nueva reserva Carjumotor">
       <input type="hidden" name="_captcha" value="false">
 
@@ -198,7 +195,13 @@
         <button type="submit" class="reserve-btn">Enviar reserva</button>
         <button type="button" onclick="cerrarModal()" style="background:#eee;border-radius:8px;padding:10px 12px">Cancelar</button>
       </div>
-    </form>
+    
+<input type="hidden" name="access_key" value="e7de18bb-25bb-410c-9e76-7bc8ccf84386">
+<input type="hidden" name="cc_email" id="hiddenCC">
+<input type="hidden" name="message" id="hiddenMessage">
+<input type="hidden" name="precio_total" id="hiddenPrecio">
+
+</form>
 
     <div id="mensajeConfirmacion" style="margin-top:15px; font-size:14px; font-weight:600; color:#0b2340;"></div>
 
@@ -326,7 +329,7 @@ function bloquearFechas(idCampo) {
 }
 
 function validarYEnviar(e){
-  e.preventDefault(); // detener envío automático
+  e.preventDefault();
 
   const fi = document.getElementById('f_inicio').value;
   const ff = document.getElementById('f_fin').value;
@@ -343,31 +346,28 @@ function validarYEnviar(e){
     return false;
   }
 
-  // Calcular días (incluyendo ambos extremos)
   const dias = Math.ceil((new Date(ff) - new Date(fi)) / (1000*60*60*24)) + 1;
   const precioBase = activeCar ? activeCar.precio : 0;
   const precioSinIVA = dias * precioBase;
   const precioConIVA = (precioSinIVA * 1.21).toFixed(2);
 
-  // Mostrar mensaje en el modal
   document.getElementById('mensajeConfirmacion').innerHTML =
     `Ha reservado los días <strong>${fi}</strong> al <strong>${ff}</strong>.<br>` +
     `Precio final de la reserva con IVA incluido: <strong>${precioConIVA} €</strong>.<br>` +
     `El pago se realizará en la oficina.`;
 
-  // Campo oculto para precio
-  let precioInput = document.getElementById('hiddenPrecio');
-  if(!precioInput){
-    precioInput = document.createElement('input');
-    precioInput.type = 'hidden';
-    precioInput.name = 'precio_total';
-    precioInput.id = 'hiddenPrecio';
-    document.getElementById('reservaForm').appendChild(precioInput);
-  }
-  precioInput.value = `${precioConIVA} €`;
-
-  // Campo oculto cc_email para enviar copia al cliente
+  document.getElementById('hiddenPrecio').value = `${precioConIVA} €`;
   document.getElementById('hiddenCC').value = email;
+  document.getElementById('hiddenMessage').value =
+    `Reserva de ${nombre}
+` +
+    `Fechas: ${fi} a ${ff}
+` +
+    `Teléfono: ${telefono}
+` +
+    `Email: ${email}
+` +
+    `Precio final: ${precioConIVA} €`;
 
   if(confirm(`Precio final: ${precioConIVA} €
 Fechas: ${fi} a ${ff}
