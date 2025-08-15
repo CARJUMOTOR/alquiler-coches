@@ -54,14 +54,111 @@
   .cond{background:#f8fafc;padding:10px;border-radius:8px;margin-top:10px;font-size:13px;color:#333;max-height:220px;overflow:auto}
   .fechas-box{background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:8px;padding:10px;margin-top:10px;color:var(--danger)}
   .fechas-box strong{color:var(--danger); font-size:12px; font-weight:700;}
-  #confirmarEnvio{display:none;margin-top:10px;background:#16a34a;color:white;padding:10px 15px;border:none;border-radius:8px;cursor:pointer;font-weight:bold;}
 </style>
 </head>
 <body>
-<!-- El resto del HTML sería el mismo, pero el script se modifica para añadir el paso intermedio -->
+
+<header>
+  <div class="wrap top">
+    <div class="brand">
+      <img src="img/logo.png" alt="Logo Carjumotor" class="logo">
+      <div>
+        <h1>Carjumotor</h1>
+        <div class="small">Alquiler de turismos · Griñón (Madrid)</div>
+      </div>
+    </div>
+    <div class="contact-top">
+      <div>Tel: <strong>696 911 964</strong> / <strong>918 149 116</strong></div>
+      <div class="small">carjumotor@gmail.com</div>
+    </div>
+    <nav>
+      <a href="#inicio" data-section="inicio" class="active">Inicio</a>
+      <a href="#nosotros" data-section="nosotros">Nosotros</a>
+      <a href="#condiciones" data-section="condiciones">Condiciones</a>
+      <a href="#contacto" data-section="contacto">Contacto</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="inicio">
+    <div class="hero">
+      <h2>Alquiler de turismos en Griñón</h2>
+      <p class="small">Vehículos revisados, seguros y al mejor precio.</p>
+    </div>
+    <h3>Turismos disponibles</h3>
+    <div class="coches" id="cochesList"></div>
+  </section>
+</main>
+
+<div class="modal-back" id="modalBack">
+  <div class="modal">
+    <div class="close-x" onclick="cerrarModal()">✕</div>
+    <h4 id="modalTitle">Reservar: <span id="modalCar"></span></h4>
+
+    <form id="reservaForm" action="https://formsubmit.co/carjumotor@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="Nueva reserva Carjumotor">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="precio_final" id="hiddenPrecio">
+
+      <label class="small">Fecha inicio
+        <input type="date" name="fecha_inicio" id="f_inicio" required>
+      </label>
+      <label class="small">Fecha fin
+        <input type="date" name="fecha_fin" id="f_fin" required>
+      </label>
+      <input type="text" name="nombre" id="f_nombre" placeholder="Nombre completo" required style="width:100%">
+      <input type="tel" name="telefono" id="f_telefono" placeholder="Teléfono" required style="width:100%">
+      <input type="email" name="email" id="f_email" placeholder="Email" required style="width:100%">
+
+      <div id="mensajeConfirmacion" style="margin-top:15px; font-size:14px; font-weight:600; color:#0b2340;"></div>
+
+      <div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end">
+        <button type="button" id="btnPreConfirm" class="reserve-btn">Enviar reserva</button>
+        <button type="submit" id="btnConfirm" class="reserve-btn hidden">Confirmar reserva</button>
+        <button type="button" onclick="cerrarModal()" style="background:#eee;border-radius:8px;padding:10px 12px">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
-function validarYEnviar(e){
-  e.preventDefault();
+const coches = [
+  { id: 'corsa', nombre: 'Opel Corsa 100 CV - Gasolina Hybrid', precio: 40, imagen: 'img/opel_corsa.jpg', eco: true, disponible: true }
+];
+function pintarCoches(){
+  const cont = document.getElementById('cochesList');
+  coches.forEach(c=>{
+    const card = document.createElement('article');
+    card.className = 'card';
+    card.innerHTML = `
+      <div>
+        <div class="thumb">
+          <img src="${c.imagen}" alt="${c.nombre}" />
+          ${c.eco ? '<div class="eco-badge">ECO</div>' : ''}
+        </div>
+        <h3>${c.nombre}</h3>
+        <div class="meta"><div class="subtle">Desde</div><div class="price">${c.precio} € / día</div></div>
+        <div class="subtle" style="margin-top:6px">IVA no incluido</div>
+      </div>
+      <div>
+        <button id="btn-${c.id}" class="reserve-btn">Reservar</button>
+      </div>`;
+    cont.appendChild(card);
+    document.getElementById(`btn-${c.id}`).addEventListener('click', ()=>abrirModal(c));
+  });
+}
+pintarCoches();
+
+let activeCar = null;
+function abrirModal(car){
+  activeCar = car;
+  document.getElementById('modalCar').textContent = car.nombre;
+  document.getElementById('modalBack').style.display = 'flex';
+}
+function cerrarModal(){ document.getElementById('modalBack').style.display='none'; activeCar=null; }
+
+document.getElementById('btnPreConfirm').addEventListener('click', ()=>{
   const fi = document.getElementById('f_inicio').value;
   const ff = document.getElementById('f_fin').value;
   const nombre = document.getElementById('f_nombre').value.trim();
@@ -69,32 +166,23 @@ function validarYEnviar(e){
   const email = document.getElementById('f_email').value.trim();
   if(!fi||!ff||!nombre||!telefono||!email){
     alert('Completa todos los campos.');
-    return false;
+    return;
   }
   if(new Date(ff) <= new Date(fi)){
     alert('La fecha fin debe ser posterior a la de inicio.');
-    return false;
+    return;
   }
   const dias = Math.ceil((new Date(ff) - new Date(fi)) / (1000*60*60*24)) + 1;
-  const precioBase = activeCar ? activeCar.precio : 0;
-  const precioSinIVA = dias * precioBase;
+  const precioSinIVA = dias * activeCar.precio;
   const precioConIVA = (precioSinIVA * 1.21).toFixed(2);
+  document.getElementById('hiddenPrecio').value = precioConIVA + " €";
   document.getElementById('mensajeConfirmacion').innerHTML =
-    `Ha reservado los días <strong>${fi}</strong> al <strong>${ff}</strong>.<br>` +
-    `Precio final de la reserva con IVA incluido: <strong>${precioConIVA} €</strong>.<br>` +
-    `El pago se realizará en la oficina.`;
-  if(!document.getElementById('precio_final')){
-    const inp = document.createElement('input');
-    inp.type='hidden'; inp.name='precio_final'; inp.id='precio_final';
-    document.getElementById('reservaForm').appendChild(inp);
-  }
-  document.getElementById('precio_final').value = precioConIVA + " €";
-  document.getElementById('confirmarEnvio').style.display = 'block';
-  return false;
-}
-function enviarFormulario(){
-  document.getElementById('reservaForm').submit();
-}
+    `Ha reservado del <strong>${fi}</strong> al <strong>${ff}</strong>.<br>` +
+    `Precio final (IVA incluido): <strong>${precioConIVA} €</strong>.<br>` +
+    `Pulse "Confirmar reserva" para enviar.`;
+  document.getElementById('btnPreConfirm').classList.add('hidden');
+  document.getElementById('btnConfirm').classList.remove('hidden');
+});
 </script>
 </body>
 </html>
