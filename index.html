@@ -197,6 +197,8 @@
       </div>
     </form>
 
+    <div id="mensajeConfirmacion" style="margin-top:15px; font-size:14px; font-weight:600; color:#0b2340;"></div>
+
     <div class="cond small" style="margin-top:10px">
       <strong>Resumen condiciones:</strong> Precio: <span id="modalPrecio"></span> € /día (IVA no incluido). Límite 200 km/día. Seguro todo riesgo con franquicia de 300 €. Pago en oficina.
     </div>
@@ -342,10 +344,13 @@ function validarYEnviar(e){
   const precioSinIVA = dias * precioBase;
   const precioConIVA = (precioSinIVA * 1.21).toFixed(2);
 
-  // Mostrar mensaje resumen
-  alert(`Ha reservado los días ${fi} al ${ff}. Precio final de la reserva con IVA incluido: ${precioConIVA} euros. El pago se realizará en la oficina.`);
+  // Mostrar mensaje en el modal
+  document.getElementById('mensajeConfirmacion').innerHTML =
+    `Ha reservado los días <strong>${fi}</strong> al <strong>${ff}</strong>.<br>` +
+    `Precio final de la reserva con IVA incluido: <strong>${precioConIVA} €</strong>.<br>` +
+    `El pago se realizará en la oficina.`;
 
-  return true;
+  return true; // Se envía el formulario
 }
 </script>
 
