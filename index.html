@@ -172,9 +172,9 @@
     <div class="close-x" onclick="cerrarModal()">✕</div>
     <h4 id="modalTitle">Reservar: <span id="modalCar"></span></h4>
 
-    <form id="reservaForm" onsubmit="return validarYEnviar(event)">
-      
-      
+    <form id="reservaForm">
+      <input type="hidden" name="_subject" value="Nueva reserva Carjumotor">
+      <input type="hidden" name="_captcha" value="false">
 
       <label class="small">Fecha inicio
         <input type="date" name="fecha_inicio" id="f_inicio" required>
@@ -355,5 +355,81 @@ function validarYEnviar(e){
 </script>
 
 <noscript>Para navegar por secciones es necesario tener JavaScript activado.</noscript>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("reservaForm");
+  if(form){
+    form.addEventListener("submit", validarYEnviar);
+  }
+});
+
+function validarYEnviar(e){
+  e.preventDefault();
+
+  const fi = document.getElementById('f_inicio').value;
+  const ff = document.getElementById('f_fin').value;
+  const nombre = document.getElementById('f_nombre').value.trim();
+  const telefono = document.getElementById('f_telefono').value.trim();
+  const email = document.getElementById('f_email').value.trim();
+  const obs = document.getElementById('f_obs').value.trim();
+
+  if(!fi||!ff||!nombre||!telefono||!email){
+    alert('Completa todos los campos.');
+    return false;
+  }
+  if(new Date(ff) <= new Date(fi)){
+    alert('La fecha fin debe ser posterior a la de inicio.');
+    return false;
+  }
+
+  const dias = Math.ceil((new Date(ff) - new Date(fi)) / (1000*60*60*24)) + 1;
+  const precioBase = activeCar ? activeCar.precio : 0;
+  const precioSinIVA = dias * precioBase;
+  const precioConIVA = (precioSinIVA * 1.21).toFixed(2);
+
+  const msg = document.getElementById('mensajeConfirmacion');
+  msg.innerHTML =
+    `Ha reservado los días <strong>${fi}</strong> al <strong>${ff}</strong>.<br>` +
+    `Precio final de la reserva con IVA incluido: <strong>${precioConIVA} €</strong>.<br>` +
+    `El pago se realizará en la oficina.`;
+
+  if(confirm(`Precio final: ${precioConIVA} €\nFechas: ${fi} a ${ff}\n\n¿Confirmar reserva?`)){
+    // Envío 1: a Carjumotor
+    emailjs.send("service_9uud3ei", "template_wjryzug", {
+      name: nombre,
+      email: "carjumotor@gmail.com",
+      telefono: telefono,
+      fechainicio: fi,
+      fechafin: ff,
+      precio: precioConIVA + " €",
+      observaciones: obs
+    })
+    .then(function(response) {
+      msg.innerHTML += `<br><span style="color:green;">[OK Carjumotor] Status: ${response.status}, Text: ${response.text}</span>`;
+    }, function(error) {
+      msg.innerHTML += `<br><span style="color:red;">[Error Carjumotor] ${JSON.stringify(error)}</span>`;
+    });
+
+    // Envío 2: al cliente
+    emailjs.send("service_9uud3ei", "template_ieuq4vc", {
+      name: nombre,
+      email: email,
+      telefono: telefono,
+      fechainicio: fi,
+      fechafin: ff,
+      precio: precioConIVA + " €",
+      observaciones: obs
+    })
+    .then(function(response) {
+      msg.innerHTML += `<br><span style="color:green;">[OK Cliente] Status: ${response.status}, Text: ${response.text}</span>`;
+    }, function(error) {
+      msg.innerHTML += `<br><span style="color:red;">[Error Cliente] ${JSON.stringify(error)}</span>`;
+    });
+  }
+  return false;
+}
+</script>
+
 </body>
 </html>
