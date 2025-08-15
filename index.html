@@ -368,18 +368,16 @@ Fechas: ${fi} a ${ff}
 
 ¿Confirmar reserva?`)){
     const formData = new FormData(e.target);
-    fetch(e.target.action, {
+    fetch("https://formsubmit.co/ajax/carjumotor@gmail.com", {
       method: 'POST',
       body: formData
-    }).then(response => {
-      if (response.ok) {
+    }).then(res => res.json())
+      .then(data => {
         document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:green;">Reserva enviada correctamente. Te contactaremos por email.</span>';
-      } else {
-        document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:red;">Error al enviar la reserva. Intenta de nuevo.</span>';
-      }
-    }).catch(() => {
-      document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:red;">Error de conexión. Intenta más tarde.</span>';
-    });
+      })
+      .catch(() => {
+        document.getElementById('mensajeConfirmacion').innerHTML += '<br><span style="color:red;">Error de conexión. Intenta más tarde.</span>';
+      });
   }
   return false;
 }
