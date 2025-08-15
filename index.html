@@ -6,8 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reserva Carjumotor</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    .modal { max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f9; }
+    .modal { max-width: 600px; margin: auto; padding: 20px; border-radius: 12px;
+             box-shadow: 0 4px 12px rgba(0,0,0,0.15); background: white; }
     .resumen-card { border: 2px solid #007BFF; border-radius: 10px; padding: 20px; margin-top: 15px; background: #f9f9f9; }
     .resumen-card h3 { margin-top: 0; color: #007BFF; }
     .precio { font-size: 1.5em; color: #28a745; font-weight: bold; }
@@ -19,6 +20,9 @@
     .alerta.exito { background: #d4edda; border: 1px solid #28a745; color: #155724; }
     .alerta.error { background: #f8d7da; border: 1px solid #dc3545; color: #721c24; }
     .alerta.info { background: #d1ecf1; border: 1px solid #0c5460; color: #0c5460; }
+    label { display: block; margin-top: 10px; }
+    input, textarea { width: 100%; padding: 8px; margin-top: 4px; border-radius: 6px; border: 1px solid #ccc; }
+    button[type="submit"] { margin-top: 15px; padding: 12px; width: 100%; background: #007BFF; color: white; border: none; border-radius: 8px; cursor: pointer; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
@@ -28,7 +32,6 @@
       const form = document.getElementById("reservaForm");
       const resumenBox = document.getElementById("resumenBox");
       const mensajeBox = document.getElementById("mensajeConfirmacion");
-      const acciones = document.getElementById("acciones");
 
       let datosReserva = {};
 
@@ -44,8 +47,16 @@
         const coche = "Opel Corsa 100 CV - Gasolina Hybrid";
         const precio = "250 €";
 
-        datosReserva = { name: nombre, telefono: telefono, email: email,
-                         fechainicio: fi, fechafin: ff, coche: coche, precio: precio, observaciones: obs };
+        datosReserva = {
+          name: nombre,
+          telefono: telefono,
+          email: email,
+          fechainicio: fi,
+          fechafin: ff,
+          coche: coche,
+          precio: precio,
+          observaciones: obs
+        };
 
         resumenBox.innerHTML = `
           <div class="resumen-card">
@@ -70,8 +81,10 @@
       function enviarReserva() {
         mensajeBox.innerHTML = '<div class="alerta info">⏳ Enviando reserva...</div>';
 
+        // Enviar primero al correo de Carjumotor
         emailjs.send("service_9uud3ei", "template_wjryzug", datosReserva)
           .then(() => {
+            // Después al cliente
             return emailjs.send("service_9uud3ei", "template_ieuq4vc", datosReserva);
           })
           .then(() => {
@@ -91,12 +104,12 @@
   <div class="modal">
     <h2>Formulario de reserva</h2>
     <form id="reservaForm">
-      <label>Fecha inicio <input type="date" id="f_inicio" required></label><br><br>
-      <label>Fecha fin <input type="date" id="f_fin" required></label><br><br>
-      <input type="text" id="f_nombre" placeholder="Nombre completo" required style="width:100%"><br><br>
-      <input type="tel" id="f_telefono" placeholder="Teléfono" required style="width:100%"><br><br>
-      <input type="email" id="f_email" placeholder="Email" required style="width:100%"><br><br>
-      <textarea id="f_obs" placeholder="Observaciones (opcional)" style="width:100%" rows="3"></textarea><br><br>
+      <label>Fecha inicio <input type="date" id="f_inicio" required></label>
+      <label>Fecha fin <input type="date" id="f_fin" required></label>
+      <label>Nombre <input type="text" id="f_nombre" required></label>
+      <label>Teléfono <input type="tel" id="f_telefono" required></label>
+      <label>Email <input type="email" id="f_email" required></label>
+      <label>Observaciones <textarea id="f_obs" rows="3"></textarea></label>
       <button type="submit">Enviar reserva</button>
     </form>
     <div id="resumenBox"></div>
