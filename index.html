@@ -64,7 +64,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
 (function(){
-   emailjs.init("HajgaxooQYQn08xO1"); // tu PUBLIC KEY
+   emailjs.init('HajgaxooQYQn08xO1'); // tu PUBLIC KEY
 })();
 </script>
 
@@ -404,18 +404,14 @@ Precio final con IVA: ${precio}`;
       return false;
     }
 
-    emailjs.send(()=>{
+    emailjs.send('service_9uud3ei', 'template_wjryzug', templateParams)=>{
       msg.innerHTML = "✅ Reserva enviada a Carjumotor";
     }).catch((err)=>{
       msg.innerHTML = "❌ Error enviando a Carjumotor: " + JSON.stringify(err);
     });
 
     // Envío al cliente
-    emailjs.send("service_9uud3ei","template_ieuq4vc",{
-      name: nombre, telefono, email,
-      fechainicio: fi, fechafin: ff,
-      observaciones: obs, coche, precio
-    }).then(()=>{
+    emailjs.send('service_9uud3ei', 'template_wjryzug', templateParams).then(()=>{
       msg.innerHTML += "<br>✅ Copia enviada al cliente";
     }).catch((err)=>{
       msg.innerHTML += "<br>❌ Error enviando al cliente: " + JSON.stringify(err);
