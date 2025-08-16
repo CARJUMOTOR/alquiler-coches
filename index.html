@@ -397,14 +397,11 @@ document.addEventListener("DOMContentLoaded", function() {
     msg.innerHTML = `⏳ Enviando...`;
 
     // Envío a Carjumotor
-    // Confirmación antes de enviar
-    const resumenTexto = `Vas a reservar del ${fi} al ${ff} (${dias} días).
-Precio final con IVA: ${precio}`;
-    if(!confirm(resumenTexto)){
-      return false;
-    }
-
-    emailjs.send(()=>{
+    emailjs.send("service_9uud3ei","template_wjryzug",{
+      name: nombre, telefono, email,
+      fechainicio: fi, fechafin: ff,
+      observaciones: obs, coche, precio
+    }).then(()=>{
       msg.innerHTML = "✅ Reserva enviada a Carjumotor";
     }).catch((err)=>{
       msg.innerHTML = "❌ Error enviando a Carjumotor: " + JSON.stringify(err);
