@@ -4,94 +4,121 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carjumotor - Alquiler de Coches</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css">
   <style>
-    body {font-family: Arial, sans-serif; margin:0; padding:0;}
-    header {background:#333; color:#fff; padding:10px 20px; display:flex; justify-content:space-between; align-items:center;}
-    header nav a {color:#fff; margin:0 10px; text-decoration:none;}
-    section {padding:40px 20px;}
-    .noticia-card {border:1px solid #ddd; border-radius:8px; overflow:hidden; max-width:600px; margin:20px auto;}
-    .noticia-card img {width:100%; height:auto; display:block;}
-    .noticia-card-content {padding:15px;}
-    .noticia-card-content h3 {margin:0 0 10px;}
-    .noticia-card-content p {color:#555;}
-    .btn-ver {display:inline-block; margin-top:10px; background:#0077cc; color:#fff; padding:8px 12px; border-radius:6px; text-decoration:none; cursor:pointer;}
-    .noticia-detalle {display:none; margin-top:20px; border-top:1px solid #ddd; padding-top:15px;}
-    .noticia-detalle.active {display:block;}
-    footer {background:#333; color:#fff; text-align:center; padding:15px;}
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    header { background: #222; padding: 10px 20px; position: fixed; top: 0; width: 100%; z-index: 1000; }
+    header nav ul { list-style: none; display: flex; justify-content: flex-end; margin: 0; padding: 0; }
+    header nav ul li { margin: 0 10px; }
+    header nav ul li a { color: #fff; text-decoration: none; font-weight: bold; }
+    section { padding: 80px 20px; }
+    .noticias { background: #f9f9f9; }
+    .noticias h2 { text-align: center; margin-bottom: 20px; }
+    .noticia-card { background: #fff; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); margin: 20px auto; max-width: 800px; overflow: hidden; }
+    .noticia-card img { width: 100%; height: auto; display: block; }
+    .noticia-card .contenido { padding: 15px; }
+    .noticia-card h3 { margin-top: 0; }
+    .noticia-card p { color: #555; }
+    .btn-ver { display: inline-block; padding: 8px 12px; margin-top: 10px; background: #007bff; color: white; border-radius: 4px; text-decoration: none; cursor: pointer; }
+    .noticia-completa { display: none; margin-top: 15px; color: #333; white-space: pre-line; }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">Carjumotor</div>
-  <nav>
-    <a href="#inicio">Inicio</a>
-    <a href="#nosotros">Nosotros</a>
-    <a href="#noticias">Noticias</a>
-    <a href="#contacto">Contacto</a>
-  </nav>
-</header>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#nosotros">Nosotros</a></li>
+        <li><a href="#noticias">Noticias</a></li>
+        <li><a href="#condiciones">Condiciones</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
 
-<section id="inicio">
-  <h1>Bienvenido a Carjumotor</h1>
-  <p>Tu empresa de alquiler de coches en Griñón (Madrid).</p>
-</section>
+  <main>
+    <!-- Sección Inicio -->
+    <section id="inicio">
+      <h1>Bienvenido a Carjumotor</h1>
+      <p>Alquiler de coches en Griñón, Madrid. Vehículos ECO al mejor precio.</p>
+    </section>
 
-<section id="nosotros">
-  <h2>Nosotros</h2>
-  <p>En Carjumotor ofrecemos coches nuevos, ECO y al mejor precio en el sur de Madrid.</p>
-</section>
+    <!-- Sección Nosotros -->
+    <section id="nosotros">
+      <h2>Nosotros</h2>
+      <p>En Carjumotor ofrecemos vehículos de alquiler ECO, con tarifas transparentes y sin sorpresas. Nuestro objetivo es que disfrutes de tu viaje con comodidad y confianza.</p>
+    </section>
 
-<!-- Nueva sección Noticias -->
-<section id="noticias">
-  <h2>Noticias</h2>
-  <div class="noticia-card">
-    <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200" alt="Coche en carretera">
-    <div class="noticia-card-content">
-      <h3>5 consejos para alquilar un coche barato en el sur de Madrid</h3>
-      <p>¿Vives en Griñón o alrededores y necesitas un coche de alquiler para moverte sin complicaciones?... </p>
-      <a class="btn-ver" onclick="toggleDetalle()">Ver artículo completo</a>
-      <div id="detalle-noticia" class="noticia-detalle">
-        <p>¿Vives en Griñón o alrededores y necesitas un coche de alquiler para moverte sin complicaciones? Cada vez más personas optan por alquilar un turismo en lugar de tener uno propio: es más flexible, económico y no tienes que preocuparte del mantenimiento.</p>
-        <p><strong>1. Compara precios… pero fíjate en lo que incluye</strong><br>
-        No te quedes solo con el precio más bajo que veas en internet. Muchas veces el “ofertón” esconde condiciones poco claras: kilometraje limitado, seguros básicos o cargos ocultos.<br>
-        👉 En Carjumotor ofrecemos tarifas transparentes y sin sorpresas, con vehículos nuevos y etiqueta ECO.</p>
-        <p><strong>2. Elige un coche adaptado a tus necesidades</strong><br>
-        Si solo lo vas a usar en ciudad o trayectos cortos, un turismo pequeño es la mejor opción: fácil de aparcar, consumo reducido y más económico. Además, al ser ECO, podrás entrar sin restricciones en Madrid cuando lo necesites.</p>
-        <p><strong>3. Revisa bien las condiciones del alquiler</strong><br>
-        Antes de firmar, asegúrate de entender:<br>
-        • Seguro incluido<br>
-        • Depósito o fianza<br>
-        • Política de combustible<br>
-        • Horarios de entrega y recogida<br>
-        En Carjumotor trabajamos con condiciones claras y fáciles de entender, sin letra pequeña.</p>
-        <p><strong>4. Apuesta por coches ECO</strong><br>
-        Además de cuidar el medio ambiente, los vehículos ECO te permiten ahorrar en combustible y evitar restricciones en zonas de bajas emisiones como Madrid. Nuestra flota en Carjumotor está compuesta únicamente por turismos ECO.</p>
-        <p><strong>5. Reserva con antelación</strong><br>
-        Si ya sabes cuándo vas a necesitar el coche, no esperes al último día: reservar con tiempo asegura mejor disponibilidad y precio. Puedes hacerlo fácilmente a través de nuestra web o llamándonos por teléfono.</p>
-        <p>🚗 Alquila tu coche en Griñón con Carjumotor<br>
-        En Carjumotor ponemos a tu disposición coches nuevos, pequeños, ECO y al mejor precio. Estamos en Griñón (Madrid), a pocos minutos de Móstoles, Fuenlabrada y Parla.</p>
-      </div>
-    </div>
-  </div>
-</section>
+    <!-- Nueva Sección Noticias -->
+    <section id="noticias" class="noticias">
+      <h2>Noticias</h2>
+      <article class="noticia-card">
+        <img src="https://cdn.pixabay.com/photo/2017/01/06/19/15/opel-1956818_1280.jpg" alt="Opel Corsa ECO">
+        <div class="contenido">
+          <h3>5 consejos para alquilar un coche barato en el sur de Madrid</h3>
+          <p>¿Vives en Griñón o alrededores y necesitas un coche de alquiler para moverte sin complicaciones? Te damos algunos consejos prácticos para ahorrar y encontrar la mejor opción...</p>
+          <span class="btn-ver" onclick="mostrarNoticia(this)">Ver artículo completo</span>
+          <div class="noticia-completa">
+            ¿Vives en Griñón o alrededores y necesitas un coche de alquiler para moverte sin complicaciones? Cada vez más personas optan por alquilar un turismo en lugar de tener uno propio: es más flexible, económico y no tienes que preocuparte del mantenimiento.
 
-<section id="contacto">
-  <h2>Contacto</h2>
-  <p>📞 Teléfono: +34 696 91 19 64</p>
-  <p>✉️ Email: carjumotor@gmail.com</p>
-</section>
+            En Carjumotor, tu empresa de alquiler de coches en Griñón, queremos darte algunos consejos prácticos para que encuentres siempre la mejor opción sin gastar de más.
 
-<footer>
-  <p>&copy; 2025 Carjumotor. Todos los derechos reservados.</p>
-</footer>
+            1. Compara precios… pero fíjate en lo que incluye
+            No te quedes solo con el precio más bajo que veas en internet. Muchas veces el “ofertón” esconde condiciones poco claras: kilometraje limitado, seguros básicos o cargos ocultos.
+            👉 En Carjumotor ofrecemos tarifas transparentes y sin sorpresas, con vehículos nuevos y etiqueta ECO.
 
-<script>
-  function toggleDetalle() {
-    document.getElementById("detalle-noticia").classList.toggle("active");
-  }
-</script>
+            2. Elige un coche adaptado a tus necesidades
+            Si solo lo vas a usar en ciudad o trayectos cortos, un turismo pequeño es la mejor opción: fácil de aparcar, consumo reducido y más económico. Además, al ser ECO, podrás entrar sin restricciones en Madrid cuando lo necesites.
+
+            3. Revisa bien las condiciones del alquiler
+            Antes de firmar, asegúrate de entender:
+            - Seguro incluido
+            - Depósito o fianza
+            - Política de combustible
+            - Horarios de entrega y recogida
+
+            En Carjumotor trabajamos con condiciones claras y fáciles de entender, sin letra pequeña.
+
+            4. Apuesta por coches ECO
+            Además de cuidar el medio ambiente, los vehículos ECO te permiten ahorrar en combustible y evitar restricciones en zonas de bajas emisiones como Madrid. Nuestra flota en Carjumotor está compuesta únicamente por turismos ECO.
+
+            5. Reserva con antelación
+            Si ya sabes cuándo vas a necesitar el coche, no esperes al último día: reservar con tiempo asegura mejor disponibilidad y precio. Puedes hacerlo fácilmente a través de nuestra web o llamándonos por teléfono.
+
+            🚗 Alquila tu coche en Griñón con Carjumotor
+            En Carjumotor ponemos a tu disposición coches nuevos, pequeños, ECO y al mejor precio. Estamos en Griñón (Madrid), a pocos minutos de Móstoles, Fuenlabrada y Parla.
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Sección Condiciones -->
+    <section id="condiciones">
+      <h2>Condiciones</h2>
+      <p>Aquí irán las condiciones de alquiler de los vehículos.</p>
+    </section>
+
+    <!-- Sección Contacto -->
+    <section id="contacto">
+      <h2>Contacto</h2>
+      <p>📞 Teléfono: +34 696 91 19 64</p>
+      <p>✉️ Email: carjumotor@gmail.com</p>
+    </section>
+  </main>
+
+  <script>
+    function mostrarNoticia(btn) {
+      const completa = btn.nextElementSibling;
+      if (completa.style.display === "block") {
+        completa.style.display = "none";
+        btn.textContent = "Ver artículo completo";
+      } else {
+        completa.style.display = "block";
+        btn.textContent = "Cerrar artículo";
+      }
+    }
+  </script>
 
 </body>
 </html>
