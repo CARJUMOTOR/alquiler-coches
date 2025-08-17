@@ -5,73 +5,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carjumotor - Alquiler de coches en Griñón</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    body {font-family: Arial, sans-serif;margin:0;padding:0;}
+    header {background:#333;color:#fff;position:fixed;width:100%;z-index:1000;}
+    header nav {display:flex;justify-content:space-around;padding:1em;}
+    header nav a {color:#fff;text-decoration:none;padding:0.5em;}
+    header nav a:hover {background:#444;border-radius:5px;}
+    section {padding:80px 20px;min-height:100vh;}
+    #inicio {background:#f2f2f2;}
+    #nosotros {background:#fff;}
+    #noticias {background:#f9f9f9;}
+    #condiciones {background:#fff;}
+    #contacto {background:#f2f2f2;}
+    .noticia {max-width:800px;margin:0 auto;text-align:left;}
+    .noticia img {width:100%;max-height:300px;object-fit:cover;border-radius:10px;margin-bottom:20px;}
+    .whatsapp-float {
+      position:fixed;width:60px;height:60px;bottom:20px;right:20px;
+      background:#25d366;color:#fff;border-radius:50px;text-align:center;
+      font-size:30px;z-index:1000;display:flex;align-items:center;justify-content:center;
+    }
+    .whatsapp-float:hover {background:#20b954;}
+  </style>
 </head>
 <body>
 
-  <!-- ========= MENÚ SUPERIOR ========= -->
-  <header>
-    <nav>
-      <ul>
-        <li><a href="#inicio">Inicio</a></li>
-        <li><a href="#nosotros">Nosotros</a></li>
-        <li><a href="#noticias">Noticias</a></li> <!-- 🔹 Nuevo item -->
-        <li><a href="#condiciones">Condiciones</a></li>
-        <li><a href="#contacto">Contacto</a></li>
-      </ul>
-    </nav>
-  </header>
+<header>
+  <nav>
+    <a href="#inicio">Inicio</a>
+    <a href="#nosotros">Nosotros</a>
+    <a href="#noticias">Noticias</a>
+    <a href="#condiciones">Condiciones</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+</header>
 
-  <!-- ========= SECCIONES EXISTENTES ========= -->
-  <section id="inicio">
-    <!-- aquí estaba tu contenido original -->
-  </section>
+<section id="inicio">
+  <h1>Bienvenido a Carjumotor</h1>
+  <p>Tu empresa de alquiler de coches ECO en Griñón (Madrid).</p>
+</section>
 
-  <section id="nosotros">
-    <!-- aquí estaba tu contenido original -->
-  </section>
+<section id="nosotros">
+  <h2>Nosotros</h2>
+  <p>En Carjumotor ofrecemos coches nuevos, económicos y con etiqueta ECO para que puedas moverte sin restricciones y al mejor precio.</p>
+</section>
 
-  <!-- ========= NUEVA SECCIÓN NOTICIAS ========= -->
-  <section id="noticias" class="section">
-    <div class="container">
-      <h2>Noticias</h2>
-      <div class="noticia">
-        <img src="https://www.opel.es/content/dam/opel/spain/vehicles/corsa/5-door/bbc-mov/16x9/opel-corsa-5-door-e-mov-16x9-01.jpg"
-             alt="Opel Corsa ECO"
-             style="max-width:100%;border-radius:8px;margin-bottom:15px;">
-        <h3>5 consejos para alquilar un coche barato en el sur de Madrid</h3>
-        <p>
-          ¿Vives en Griñón o alrededores y necesitas un coche de alquiler para moverte sin complicaciones?  
-          Cada vez más personas optan por alquilar un turismo en lugar de tener uno propio: es más flexible, económico y sin mantenimiento.
-        </p>
-        <a href="#" onclick="document.getElementById('noticia-completa').style.display='block';this.style.display='none';return false;" style="color:#007BFF;font-weight:bold;">
-          Ver artículo completo
-        </a>
-        <div id="noticia-completa" style="display:none;margin-top:15px;">
-          <p><strong>1. Compara precios…</strong> No te quedes solo con el precio más bajo que veas en internet. …</p>
-          <p><strong>2. Elige un coche adaptado…</strong> Si solo lo vas a usar en ciudad…</p>
-          <p><strong>3. Revisa bien las condiciones…</strong> Seguro incluido, depósito, política de combustible…</p>
-          <p><strong>4. Apuesta por coches ECO…</strong> Nuestra flota en Carjumotor está compuesta únicamente por turismos ECO.</p>
-          <p><strong>5. Reserva con antelación…</strong> Así aseguras mejor disponibilidad y precio.</p>
-          <p><em>📍 Carjumotor – Alquiler de coches en Griñón (Madrid)</em></p>
-        </div>
-      </div>
-    </div>
-  </section>
+<section id="noticias">
+  <h2>Noticias</h2>
+  <div class="noticia">
+    <img src="https://cdn.motor1.com/images/mgl/nEErm/s1/opel-corsa-2023.jpg" alt="Opel Corsa ECO">
+    <h3>5 consejos para alquilar un coche barato en el sur de Madrid</h3>
+    <p>¿Vives en Griñón o alrededores y necesitas un coche de alquiler para moverte sin complicaciones? Cada vez más personas optan por alquilar un turismo en lugar de tener uno propio: es más flexible, económico y no tienes que preocuparte del mantenimiento.</p>
+    <p><strong>1. Compara precios… pero fíjate en lo que incluye</strong><br>
+    No te quedes solo con el precio más bajo que veas en internet. Muchas veces el “ofertón” esconde condiciones poco claras: kilometraje limitado, seguros básicos o cargos ocultos. En Carjumotor ofrecemos tarifas transparentes y sin sorpresas.</p>
+    <p><strong>2. Elige un coche adaptado a tus necesidades</strong><br>
+    Si solo lo vas a usar en ciudad o trayectos cortos, un turismo pequeño es la mejor opción: fácil de aparcar, consumo reducido y más económico.</p>
+    <p><strong>3. Revisa bien las condiciones del alquiler</strong><br>
+    Antes de firmar, asegúrate de entender seguro, depósito, combustible y horarios.</p>
+    <p><strong>4. Apuesta por coches ECO</strong><br>
+    Nuestra flota en Carjumotor está compuesta únicamente por turismos ECO.</p>
+    <p><strong>5. Reserva con antelación</strong><br>
+    Si ya sabes cuándo lo necesitarás, no esperes al último día: así aseguras mejor precio y disponibilidad.</p>
+    <p>📍 Griñón (Madrid) — 📞 +34 696 91 19 64 — 💻 Reserva online en nuestra web.</p>
+  </div>
+</section>
 
-  <section id="condiciones">
-    <!-- aquí estaba tu contenido original -->
-  </section>
+<section id="condiciones">
+  <h2>Condiciones</h2>
+  <p>Aquí puedes consultar nuestras condiciones generales de alquiler de vehículos.</p>
+</section>
 
-  <section id="contacto">
-    <!-- aquí estaba tu contenido original -->
-  </section>
+<section id="contacto">
+  <h2>Contacto</h2>
+  <p>Escríbenos para cualquier consulta o reserva.</p>
+  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3035.595623011061!2d-3.857!3d40.21!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd4170f6cf123%3A0x123456789abcdef!2sGriñón!5e0!3m2!1ses!2ses!4v0000000000" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+</section>
 
-  <!-- ========= WHATSAPP FLOTANTE ========= -->
-  <a href="https://wa.me/34696911964" target="_blank" style="position:fixed;bottom:20px;right:20px;z-index:999;">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
-         alt="WhatsApp"
-         style="width:60px;height:60px;">
-  </a>
+<a href="https://wa.me/34696911964" class="whatsapp-float" target="_blank">💬</a>
 
 </body>
 </html>
