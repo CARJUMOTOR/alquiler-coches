@@ -405,7 +405,7 @@ form.addEventListener("submit", function(e){
     alert('Completa todos los campos.');
     return;
   }
-  if(new Date(ff) <= new Date(fi)){
+  if(new Date(ff) < new Date(fi)){
     alert('La fecha fin debe ser posterior a la de inicio.');
     return;
   }
