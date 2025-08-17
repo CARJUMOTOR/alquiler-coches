@@ -1,108 +1,53 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Carjumotor - Alquiler de coches en Griñón</title>
-  <link rel="stylesheet" href="styles.css" />
-  <style>
-    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9; }
-    header { background:#222; color:#fff; padding:12px 20px; position:sticky; top:0; z-index:1000; }
-    nav ul { display:flex; list-style:none; gap:20px; margin:0; padding:0; }
-    nav ul li { cursor:pointer; }
-    section { padding:40px 20px; }
-    h3 { margin-bottom:20px; }
-    .hidden { display:none; }
-    footer { background:#222; color:#fff; padding:20px; text-align:center; }
-    .news-card img { border-radius:8px; }
-    .whatsapp-float {
-      position:fixed; bottom:20px; right:20px; background:#25D366; color:#fff;
-      border-radius:50%; width:60px; height:60px; display:flex; align-items:center; justify-content:center;
-      font-size:28px; box-shadow:0 2px 6px rgba(0,0,0,0.3); z-index:2000;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carjumotor - Alquiler de coches</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+  <!-- Menú de navegación -->
   <header>
     <nav>
       <ul>
-        <li onclick="mostrar('inicio')">Inicio</li>
-        <li onclick="mostrar('nosotros')">Nosotros</li>
-        <li onclick="mostrar('noticias')">Noticias</li>
-        <li onclick="mostrar('condiciones')">Condiciones</li>
-        <li onclick="mostrar('contacto')">Contacto</li>
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#nosotros">Nosotros</a></li>
+        <li><a href="#condiciones">Condiciones</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+        <li><a href="#noticias">Noticias</a></li>
       </ul>
     </nav>
   </header>
 
-  <main>
-    <section id="inicio">
-      <h3>Bienvenido a Carjumotor</h3>
-      <p>Alquiler de coches ECO en Griñón, Madrid. Tu movilidad sin complicaciones.</p>
-    </section>
+  <!-- Sección Nosotros -->
+  <section id="nosotros">
+    <h2>Nosotros</h2>
+    <img src="img/logo.png" alt="Instalaciones Carjumotor" style="max-width:300px;">
+    <p>En Carjumotor ofrecemos coches ECO de alquiler al mejor precio en Griñón.</p>
+  </section>
 
-    <section id="nosotros" class="hidden">
-      <h3>Nosotros</h3>
-      <div class="nosotros">
-        <p>En Carjumotor somos especialistas en <strong>alquiler de turismos</strong> para particulares, autónomos y empresas...</p>
-        <p>En Carjumotor trabajamos para que solo te preocupes de <strong>disfrutar del camino</strong>.</p>
-        <div style="text-align:center; margin-top:20px;">
-          <img src="img/logo_nave.jpg" alt="Instalaciones Carjumotor" style="max-width:100%;border-radius:10px;">
-        </div>
-      </div>
-    </section>
+  <!-- Sección Noticias -->
+  <section id="noticias">
+    <h2>Noticias</h2>
+    <article>
+      <h3>5 consejos para alquilar un coche barato en el sur de Madrid</h3>
+      <img src="img/noticia_1.jpg" alt="Coche ECO Opel Corsa" style="max-width:400px;">
+      <p>¿Vives en Griñón o alrededores y necesitas un coche de alquiler para moverte sin complicaciones?... </p>
+      <a href="noticia1.html">Ver artículo completo</a>
+    </article>
+  </section>
 
-    <section id="noticias" class="hidden">
-      <h3>Noticias</h3>
-      <div class="news-list" style="display:grid;grid-template-columns:1fr;gap:20px;max-width:1100px;margin:0 auto">
-        <article class="news-card" style="background:#fff;border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,0.1);overflow:hidden">
-          <div style="display:flex;flex-direction:column">
-            <img src="img/noticia_1.jpg" alt="Opel Corsa ECO" style="width:100%;height:260px;object-fit:cover;margin:12px 0">
-            <div style="padding:18px">
-              <h4>5 consejos para alquilar un coche barato en el sur de Madrid</h4>
-              <p>¿Vives en Griñón o alrededores y necesitas un coche de alquiler para moverte sin complicaciones?...</p>
-              <details>
-                <summary style="cursor:pointer">Ver artículo completo</summary>
-                <div style="margin-top:10px;line-height:1.6">
-                  <p><strong>1. Compara precios…</strong> No te quedes solo con el precio más bajo...</p>
-                  <p><strong>2. Elige un coche adaptado...</strong> Un turismo pequeño ECO es ideal.</p>
-                  <p><strong>3. Revisa bien las condiciones...</strong> Seguro, fianza, combustible.</p>
-                  <p><strong>4. Apuesta por coches ECO...</strong> Ahorras en consumo y evitas restricciones.</p>
-                  <p><strong>5. Reserva con antelación...</strong> Mejor precio y disponibilidad.</p>
-                  <p>📍 Griñón (Madrid) — 📞 696 911 964 — 💻 Reserva online en nuestra web</p>
-                </div>
-              </details>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
+  <!-- Sección Contacto -->
+  <section id="contacto">
+    <h2>Contacto</h2>
+    <p>📞 Teléfono: +34 696 91 19 64</p>
+    <a href="https://wa.me/34696911964" target="_blank">
+      <img src="img/whatsapp.png" alt="WhatsApp" style="width:40px;height:40px;">
+    </a>
+  </section>
 
-    <section id="condiciones" class="hidden">
-      <h3>Condiciones</h3>
-      <p>Condiciones claras, sin letra pequeña. Seguro incluido, asistencia 24h y coches ECO.</p>
-    </section>
-
-    <section id="contacto" class="hidden">
-      <h3>Contacto</h3>
-      <p>📞 Llámanos al <strong>696 911 964</strong> o visítanos en Griñón, Madrid.</p>
-      <div style="width:100%;height:300px">
-        <iframe src="https://maps.google.com/maps?q=Griñón,%20Madrid&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0" allowfullscreen="" loading="lazy"></iframe>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>&copy; 2025 Carjumotor - Alquiler de coches en Griñón</p>
-  </footer>
-
-  <a href="https://wa.me/34696911964" target="_blank" class="whatsapp-float">💬</a>
-
-  <script>
-    function mostrar(id) {
-      document.querySelectorAll("main section").forEach(sec => sec.classList.add("hidden"));
-      document.getElementById(id).classList.remove("hidden");
-    }
-  </script>
 </body>
 </html>
