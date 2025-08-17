@@ -1,79 +1,466 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carjumotor - Alquiler de Coches en Griñón</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Carjumotor - Alquiler de Turismos</title>
+<meta name="description" content="Carjumotor - Alquiler de turismos en Griñón. Opel Corsa, Seat León, Nissan Qashqai y Volkswagen Passat disponibles. Reserva online." />
+<style>
+  :root{
+    --navy:#0b2340;
+    --yellow:#ffd100;
+    --white:#ffffff;
+    --muted:#6b7280;
+    --card-shadow: 0 6px 18px rgba(11,35,64,0.08);
+    --danger-bg:#ffe5e5;
+    --danger:#b91c1c;
+    --danger-border:#ef4444;
+    --success:#065f46;
+    --success-bg:#ecfdf5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter, "Segoe UI", Roboto, Arial, sans-serif;background:#f6f8fb;color:var(--navy)}
+  a{color:inherit;cursor:pointer;text-decoration:none}
+  header{background:var(--white);color:var(--navy);padding:12px 16px;border-bottom:1px solid #ddd}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:140px;height:auto;display:block}
+  .brand h1{margin:0;font-size:26px}
+  .contact-top{text-align:right;font-weight:600;font-size:14px}
+  nav{margin-top:8px;display:flex;gap:14px;flex-wrap:wrap;font-size:15px;font-weight:600}
+  nav a:hover{color:var(--yellow)}
+  nav a.active{color:var(--yellow)}
+  .hero{background:linear-gradient(90deg, rgba(1,58,99,0.95), rgba(11,35,64,0.95));color:var(--white);padding:24px;border-radius:10px;margin:20px 0;box-shadow:var(--card-shadow)}
+  .hero h2{margin:0 0 6px;font-size:28px}
+  .small{font-size:13px;color:var(--muted)}
+  section{margin:18px 0}
+  .coches{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+  .card{background:var(--white);padding:12px;border-radius:10px;box-shadow:var(--card-shadow);display:flex;flex-direction:column;justify-content:space-between}
+  .thumb{position:relative;border-radius:8px;overflow:hidden;height:170px}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block;background:#f0f3f5}
+  .eco-badge{position:absolute;left:10px;top:10px;background:#16a34a;color:white;padding:6px 8px;border-radius:6px;font-weight:700;font-size:12px}
+  .card h3{margin:10px 0 6px;font-size:18px}
+  .meta{display:flex;justify-content:space-between;align-items:center}
+  .price{color:var(--navy);font-weight:800}
+  .subtle{color:var(--muted);font-size:13px}
+  .reserve-btn{background:var(--navy);color:var(--white);border:none;padding:10px;border-radius:8px;cursor:pointer;font-weight:800;width:100%}
+  .full-btn{background:#e6e8eb;color:#8b949e;border:none;padding:10px;border-radius:8px;cursor:not-allowed;width:100%}
+  .map-wrap iframe{width:100%;height:320px;border:0;border-radius:8px}
+  .nosotros p{color:#333;line-height:1.7;font-size:15px;margin-bottom:12px;text-align:justify}
+  footer{margin-top:26px;padding:18px 0;text-align:center;color:var(--muted);font-size:14px}
+
+  /* Mostrar solo la sección activa */
+  .hidden{display:none}
+
+  /* Modal reserva */
+  .modal-back{position:fixed;inset:0;background:rgba(2,6,23,0.5);display:none;align-items:center;justify-content:center;padding:18px;z-index:60}
+  .modal{background:var(--white);max-width:640px;width:100%;border-radius:10px;padding:18px;box-shadow:0 12px 40px rgba(2,6,23,0.2);position:relative}
+  .close-x{position:absolute;right:10px;top:8px;background:#eee;border-radius:6px;padding:6px;cursor:pointer}
+  .cond{background:#f8fafc;padding:10px;border-radius:8px;margin-top:10px;font-size:13px;color:#333;max-height:220px;overflow:auto}
+  .fechas-box{background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:8px;padding:10px;margin-top:10px;color:var(--danger)}
+  .fechas-box strong{color:var(--danger); font-size:12px; font-weight:700;}
+
+  /* Confirm pop-up */
+  #confirmBack{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:2000}
+  #confirmBack .modal{max-width:420px}
+
+  /* Mensajes */
+  .msg{margin-top:12px;padding:10px 12px;border-radius:8px;font-weight:600}
+  .msg.success{background:var(--success-bg);color:var(--success)}
+  .msg.loading{background:#eef2ff;color:#3730a3}
+</style>
+
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+(function(){
+   /* Public Key provista por el cliente */
+   emailjs.init("HajgaxooQYQn08xO1");
+})();
+</script>
+
+<style>
+/* WhatsApp floating button */
+.whatsapp-float{position:fixed;bottom:18px;right:18px;width:56px;height:56px;border-radius:50%;background:#25D366;box-shadow:0 8px 20px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;text-decoration:none;z-index:99999}
+.whatsapp-float:hover{transform:translateY(-1px)}
+.whatsapp-float svg{display:block}
+</style>
 </head>
 <body>
-  <!-- ======= Header ======= -->
-  <header id="header">
-    <div class="container">
-      <h1><a href="#inicio">Carjumotor</a></h1>
-      <nav id="navbar" class="navbar">
-        <ul>
-          <li><a class="nav-link" href="#inicio">Inicio</a></li>
-          <li><a class="nav-link" href="#nosotros">Nosotros</a></li>
-          <li><a class="nav-link" href="#condiciones">Condiciones</a></li>
-          <li><a class="nav-link" href="#noticias">Noticias</a></li>
-          <li><a class="nav-link" href="#contacto">Contacto</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
 
-  <!-- ======= Inicio ======= -->
+<header>
+  <div class="wrap top">
+    <div class="brand">
+      <img src="img/logo.png" alt="Logo Carjumotor" class="logo">
+      <div>
+        <h1>Carjumotor</h1>
+        <div class="small">Alquiler de turismos · Griñón (Madrid)</div>
+      </div>
+    </div>
+    <div class="contact-top">
+      <div>Tel: <strong>696 911 964</strong> / <strong>918 149 116</strong></div>
+      <div class="small">carjumotor@gmail.com</div>
+    </div>
+    <nav>
+      <a href="#inicio" data-section="inicio" class="active">Inicio</a>
+      <a href="#nosotros" data-section="nosotros">Nosotros</a>
+      <a href="#noticias" data-section="noticias">Noticias</a>
+      <a href="#condiciones" data-section="condiciones">Condiciones</a>
+      <a href="#contacto" data-section="contacto">Contacto</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- INICIO -->
   <section id="inicio">
-    <div class="container">
-      <h2>Bienvenido a Carjumotor</h2>
-      <p>Alquiler de coches ECO en Griñón, Madrid.</p>
+    <div class="hero">
+      <h2>Alquiler de turismos en Griñón</h2>
+      <p class="small">Vehículos revisados, seguros y al mejor precio.</p>
+    </div>
+
+    <h3>Turismos disponibles</h3>
+    <div class="coches" id="cochesList"></div>
+  </section>
+
+  <!-- NOSOTROS -->
+  <section id="nosotros" class="hidden">
+    <h3>Nosotros</h3>
+    <div class="nosotros">
+      <p>En Carjumotor somos especialistas en <strong>alquiler de turismos</strong> para particulares, autónomos y empresas. Contamos con años de profesionalidad y experiencia en el sector, lo que nos permite ofrecer un servicio ágil, transparente y adaptado a cada necesidad.</p>
+      <p>Nuestra prioridad es que disfrutes de la <strong>tranquilidad y la seguridad</strong> de un trabajo bien hecho. Por eso renovamos nuestra flota con frecuencia y seleccionamos modelos que combinan eficiencia, comodidad y la mejor relación calidad‑precio.</p>
+      <p>Disponemos de una <strong>amplia gama de coches</strong> (compactos, familiares y SUV) para distintos usos: escapadas de fin de semana, viajes de trabajo o desplazamientos urbanos. Si lo necesitas, te asesoramos para elegir el vehículo que mejor encaje con tu trayecto, equipaje y número de pasajeros.</p>
+      <p>Además, ante cualquier imprevisto, tendrás acceso a <strong>asistencia en carretera 24/7</strong> durante todo el periodo de alquiler. Creemos en la transparencia: <strong>sin costes ocultos</strong>, condiciones claras y comunicación directa desde la reserva hasta la devolución.</p>
+      <p>En Carjumotor trabajamos para que solo te preocupes de <strong>disfrutar del camino</strong>. Nuestro compromiso es ofrecerte una experiencia de alquiler sencilla, fiable y al precio justo.</p>
+      <div style="text-align:center; margin-top:20px;">
+        <img src="img/nave_foto.jpg" alt="Nave Carjumotor" style="max-width:200px; height:auto;">
+      </div>
     </div>
   </section>
 
-  <!-- ======= Nosotros ======= -->
-  <section id="nosotros">
-    <div class="container">
-      <h2>Nosotros</h2>
-      <p>En Carjumotor nos especializamos en el alquiler de coches ECO para que conduzcas sin restricciones en Madrid.</p>
-      <img src="img/nave_foto.jpg" alt="Nave Carjumotor" style="max-width:100%; height:auto; display:block; margin:20px auto;">
-    </div>
-  </section>
-
-  <!-- ======= Condiciones ======= -->
-  <section id="condiciones">
-    <div class="container">
-      <h2>Condiciones</h2>
-      <p>Consulta nuestras condiciones de alquiler de forma clara y sencilla.</p>
-    </div>
-  </section>
-
-  <!-- ======= Noticias ======= -->
-  <section id="noticias">
-    <div class="container">
-      <h2>Noticias</h2>
-      <article>
-        <h3>5 consejos para alquilar un coche barato en el sur de Madrid</h3>
-        <img src="img/noticia_1.jpg" alt="Noticia alquiler coche" style="max-width:400px; width:100%; height:auto; display:block; margin:20px auto;">
-        <p>
-          ¿Vives en Griñón o alrededores y necesitas un coche de alquiler para moverte sin complicaciones?  
-          Cada vez más personas optan por alquilar un turismo en lugar de tener uno propio.
-        </p>
-        <a href="#">Ver artículo completo</a>
+  <!-- NOTICIAS -->
+  <section id="noticias" class="hidden">
+    <h3>Noticias</h3>
+    <div class="news-list" style="display:grid;grid-template-columns:1fr;gap:20px;max-width:1100px;margin:0 auto">
+      <article class="news-card" style="background:#fff;border-radius:14px;box-shadow:var(--card-shadow);overflow:hidden">
+        <div style="display:flex;flex-direction:column">
+          <img id="foto-noticia"
+               src="img/noticia_1.jpg"
+               alt="Opel Corsa ECO"
+               style="max-width:380px;width:100%;height:auto;object-fit:contain;border-radius:8px;margin:12px auto" />
+          <div style="padding:18px 18px 22px">
+            <h4 style="margin:0 0 10px">5 consejos para alquilar un coche barato en el sur de Madrid</h4>
+            <p style="margin:0 0 12px;color:var(--muted)">¿Vives en Griñón o alrededores y necesitas un coche de alquiler para moverte sin complicaciones? Cada vez más personas optan por alquilar un turismo: es flexible, económico y sin mantenimiento.</p>
+            <details>
+              <summary style="cursor:pointer">Ver artículo completo</summary>
+              <div style="margin-top:10px;line-height:1.6">
+                <p><strong>1. Compara precios… pero fíjate en lo que incluye</strong><br>Revisa kilometraje, seguro y cargos ocultos.</p>
+                <p><strong>2. Elige un coche adaptado a tus necesidades</strong><br>Para ciudad, un turismo pequeño ECO es ideal.</p>
+                <p><strong>3. Revisa bien las condiciones del alquiler</strong><br>Seguro, fianza, combustible y horarios.</p>
+                <p><strong>4. Apuesta por coches ECO</strong><br>Ahorro en consumo y acceso a ZBE.</p>
+                <p><strong>5. Reserva con antelación</strong><br>Mejor precio y disponibilidad.</p>
+                <p>📍 Griñón (Madrid) — 📞 696 911 964 — 💻 Reserva online en nuestra web</p>
+              </div>
+            </details>
+          </div>
+        </div>
       </article>
     </div>
   </section>
 
-  <!-- ======= Contacto ======= -->
-  <section id="contacto">
-    <div class="container">
-      <h2>Contacto</h2>
-      <p>📞 Teléfono: +34 696 91 19 64</p>
-      <a href="https://wa.me/34696911964" target="_blank" style="font-size:18px; text-decoration:none;">
-        💬 Escríbenos por WhatsApp
-      </a>
+  <!-- CONDICIONES -->
+  <section id="condiciones" class="hidden">
+    <h3>Condiciones Generales de Alquiler</h3>
+    <div class="small" style="background:#f8fafc;padding:10px;border-radius:8px">
+      <p><strong>1. Identificación:</strong> Carjumotor, Calle Uruguay 2, 28971 Griñón (Madrid).</p>
+      <p><strong>2. Objeto:</strong> Regulación del alquiler del vehículo durante el periodo contratado.</p>
+      <p><strong>3. Kilometraje:</strong> Límite de 200 km diarios. Exceso por kilómetro: 0,25 céntimos.</p>
+      <p><strong>4. Seguro:</strong> Todo riesgo con franquicia de 300 €. No cubre daños por negligencia o conducción bajo efectos de alcohol/drogas.</p>
+      <p><strong>5. Pago y depósitos:</strong> El pago se realiza en oficina. Se podrá exigir tarjeta de crédito como garantía.</p>
+      <p><strong>6. Requisitos:</strong> Permiso de conducir vigente y mínimo 23 años de edad con 2 años de antigüedad.</p>
+      <p><strong>7. Combustible:</strong> El vehículo se entrega con el depósito lleno y debe devolverse igual. De no ser así, se cobrará el combustible faltante.</p>
+      <p><strong>8. Mantenimiento:</strong> Incluido en el precio salvo mal uso del vehículo.</p>
+      <p><strong>9. Cancelaciones:</strong> Gratis con 48 horas de antelación.</p>
     </div>
   </section>
 
+  <!-- CONTACTO -->
+  <section id="contacto" class="hidden">
+    <h3>Contacto</h3>
+    <p><strong>Dirección:</strong> Calle Uruguay 2, Griñón, Madrid 28971</p>
+    <p><strong>Teléfono:</strong> 696 911 964 / 918 149 116</p>
+    <p><strong>Email:</strong> <a href="mailto:carjumotor@gmail.com">carjumotor@gmail.com</a></p>
+    <div class="map-wrap">
+      <iframe src="https://www.google.com/maps?q=Calle+Uruguay+2+Griñon+Madrid+28971&output=embed" loading="lazy"></iframe>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 Carjumotor — Calle Uruguay 2, Griñón (Madrid) • Tel: 696911964 • 918149116 • carjumotor@gmail.com
+  </footer>
+</main>
+
+<!-- Modal reserva -->
+<div class="modal-back" id="modalBack">
+  <div class="modal">
+    <div class="close-x" onclick="cerrarModal()">✕</div>
+    <h4 id="modalTitle">Reservar: <span id="modalCar"></span></h4>
+
+    <form id="reservaForm">
+      <input type="hidden" name="_subject" value="Nueva reserva Carjumotor">
+      <input type="hidden" name="_captcha" value="false">
+
+      <label class="small">Fecha inicio
+        <input type="date" name="fecha_inicio" id="f_inicio" required>
+      </label>
+      <label class="small">Fecha fin
+        <input type="date" name="fecha_fin" id="f_fin" required>
+      </label>
+      <input type="text" name="nombre" id="f_nombre" placeholder="Nombre completo" required style="width:100%">
+      <input type="tel" name="telefono" id="f_telefono" placeholder="Teléfono" required style="width:100%">
+      <input type="email" name="email" id="f_email" placeholder="Email" required style="width:100%">
+      <textarea name="observaciones" id="f_obs" placeholder="Observaciones (opcional)" style="width:100%" rows="3"></textarea>
+
+      <div class="fechas-box" id="fechasNoDisp">
+        <span>Fechas no disponibles:</span>
+      </div>
+
+      <div id="mensajeConfirmacion" class="msg" style="display:none;"></div>
+
+      <div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end">
+        <button type="submit" class="reserve-btn">Enviar reserva</button>
+        <button type="button" onclick="cerrarModal()" style="background:#eee;border-radius:8px;padding:10px 12px">Cancelar</button>
+      </div>
+    </form>
+
+    <div class="cond small" style="margin-top:10px">
+      <strong>Resumen condiciones:</strong> Precio: <span id="modalPrecio"></span> € /día (IVA no incluido). Límite 200 km/día. Seguro todo riesgo con franquicia de 300 €. Pago en oficina.
+    </div>
+  </div>
+</div>
+
+<!-- Pop-up confirmación -->
+<div class="modal-back" id="confirmBack">
+  <div class="modal">
+    <h4>Confirmar reserva</h4>
+    <div id="confirmResumen" style="margin:15px 0; font-size:15px; line-height:1.6"></div>
+    <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:15px;">
+      <button id="btnConfirmar" class="reserve-btn">Confirmar y enviar</button>
+      <button id="btnCancelarConfirm" style="background:#eee;border-radius:8px;padding:10px 12px">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- WhatsApp Floating Button -->
+<a href="https://wa.me/34696911964" class="whatsapp-float" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+    <path fill="#fff" d="M19.11 17.06c-.29-.14-1.69-.83-1.95-.92-.26-.1-.45-.14-.64.14-.19.29-.74.92-.91 1.11-.17.19-.34.22-.63.07-.29-.14-1.21-.45-2.3-1.45-.85-.76-1.42-1.7-1.58-1.99-.17-.29-.02-.44.13-.58.13-.13.29-.34.43-.51.14-.17.19-.29.29-.48.1-.19.05-.36-.02-.51-.07-.14-.64-1.54-.88-2.11-.23-.56-.47-.49-.64-.49-.16 0-.35-.01-.54-.01s-.51.07-.78.36c-.26.29-1.02 1-1.02 2.44s1.05 2.84 1.19 3.03c.14.19 2.07 3.16 5.02 4.43.7.3 1.25.48 1.68.62.71.23 1.36.2 1.88.12.57-.08 1.69-.69 1.93-1.35.24-.66.24-1.22.17-1.34-.07-.12-.26-.19-.55-.33z"/>
+  </svg>
+</a>
+
+<noscript>Para navegar por secciones es necesario tener JavaScript activado.</noscript>
+
+<script>
+/* ======== NAVEGACIÓN POR SECCIONES ======== */
+const sections = ["inicio","nosotros","noticias","condiciones","contacto"];
+function showSection(id){
+  sections.forEach(s => {
+    const el = document.getElementById(s);
+    if(!el) return;
+    if(s === id){ el.classList.remove("hidden"); }
+    else { el.classList.add("hidden"); }
+  });
+  document.querySelectorAll('nav a[data-section]').forEach(a=>{
+    a.classList.toggle('active', a.dataset.section === id);
+  });
+  if(location.hash !== "#" + id){
+    history.pushState(null, "", "#" + id);
+  }
+}
+document.querySelectorAll('nav a[data-section]').forEach(a => {
+  a.addEventListener('click', (e)=>{ e.preventDefault(); showSection(a.dataset.section); });
+});
+window.addEventListener('DOMContentLoaded', ()=>{
+  const initial = (location.hash || "#inicio").replace("#","");
+  showSection(sections.includes(initial) ? initial : "inicio");
+});
+window.addEventListener('hashchange', ()=>{
+  const id = (location.hash || "#inicio").replace("#","");
+  showSection(sections.includes(id) ? id : "inicio");
+});
+
+/* ======== FLOTa SOLO EN INICIO ======== */
+const coches = [
+  { id: 'corsa',   nombre: 'Opel Corsa 100 CV - Gasolina Hybrid', precio: 40, imagen: 'img/opel_corsa.jpg',      eco: true,  disponible: true  },
+  { id: 'leon',    nombre: 'Seat León TDI 110 CV - Diesel',        precio: 55, imagen: 'img/seat_leon.jpg',       eco: false, disponible: false },
+  { id: 'qashqai', nombre: 'Nissan Qashqai 130 CV - Gasolina',     precio: 65, imagen: 'img/nissan_qashqai.jpg',  eco: false, disponible: false },
+  { id: 'passat',  nombre: 'Volkswagen Passat 150 CV - Diesel',    precio: 70, imagen: 'img/vw_passat.jpg',       eco: false, disponible: false }
+];
+
+function pintarCoches(){
+  const cont = document.getElementById('cochesList');
+  if(!cont) return;
+  cont.innerHTML = '';
+  coches.forEach(c=>{
+    const card = document.createElement('article');
+    card.className = 'card';
+    card.innerHTML = `
+      <div>
+        <div class="thumb">
+          <img src="${c.imagen}" alt="${c.nombre}" />
+          ${c.eco ? '<div class="eco-badge">ECO</div>' : ''}
+        </div>
+        <h3>${c.nombre}</h3>
+        <div class="meta"><div class="subtle">Desde</div><div class="price">${c.precio} € / día</div></div>
+        <div class="subtle" style="margin-top:6px">IVA no incluido</div>
+      </div>
+      <div>
+        <button id="btn-${c.id}" class="${c.disponible ? 'reserve-btn' : 'full-btn'}" ${c.disponible ? '' : 'disabled'}>
+          ${c.disponible ? 'Reservar' : 'COMPLETO'}
+        </button>
+      </div>
+    `;
+    cont.appendChild(card);
+    if(c.disponible){
+      document.getElementById(`btn-${c.id}`).addEventListener('click', ()=>abrirModal(c));
+    }
+  });
+}
+pintarCoches();
+
+/* ======== MODAL ======== */
+let activeCar = null;
+const fechasOcupadas = ["2025-08-14","2025-08-15","2025-08-20"];
+
+function abrirModal(car){
+  activeCar = car;
+  document.getElementById('modalCar').textContent = car.nombre;
+  document.getElementById('modalPrecio').textContent = car.precio;
+
+  // Reset campos
+  document.getElementById('f_inicio').value = '';
+  document.getElementById('f_fin').value = '';
+  document.getElementById('f_nombre').value = '';
+  document.getElementById('f_telefono').value = '';
+  document.getElementById('f_email').value = '';
+  document.getElementById('f_obs').value = '';
+  const msg = document.getElementById('mensajeConfirmacion');
+  msg.style.display = 'none';
+  msg.className = 'msg';
+
+  // Fechas no disponibles
+  const box = document.getElementById('fechasNoDisp');
+  box.innerHTML = '<span>Fechas no disponibles:</span> ' + fechasOcupadas.map(f => `<strong>${f}</strong>`).join(', ');
+
+  // Campo oculto coche
+  let hidden = document.getElementById('hiddenCar');
+  if(!hidden){
+    hidden = document.createElement('input');
+    hidden.type='hidden'; hidden.name='coche'; hidden.id='hiddenCar';
+    document.getElementById('reservaForm').appendChild(hidden);
+  }
+  hidden.value = car.nombre;
+
+  // Validación de fechas ocupadas
+  ['f_inicio','f_fin'].forEach(id=>{
+    const campo = document.getElementById(id);
+    campo.oninput = () => {
+      if (fechasOcupadas.includes(campo.value)) {
+        alert("Fecha no disponible");
+        campo.value = "";
+      }
+    };
+  });
+
+  document.getElementById('modalBack').style.display = 'flex';
+}
+
+function cerrarModal(){
+  document.getElementById('modalBack').style.display='none';
+  activeCar = null;
+}
+
+/* ======== POPUP CONFIRMAR & ENVÍO EMAILJS ======== */
+const form = document.getElementById("reservaForm");
+const confirmBack = document.getElementById("confirmBack");
+const confirmResumen = document.getElementById("confirmResumen");
+const btnConfirmar = document.getElementById("btnConfirmar");
+const btnCancelarConfirm = document.getElementById("btnCancelarConfirm");
+
+let payload = null;
+
+form.addEventListener("submit", function(e){
+  e.preventDefault();
+
+  const fi = document.getElementById('f_inicio').value;
+  const ff = document.getElementById('f_fin').value;
+  const nombre = document.getElementById('f_nombre').value.trim();
+  const telefono = document.getElementById('f_telefono').value.trim();
+  const email = document.getElementById('f_email').value.trim();
+  const obs = document.getElementById('f_obs').value.trim();
+  const coche = document.getElementById('hiddenCar')?.value || (activeCar ? activeCar.nombre : "No indicado");
+
+  if(!fi||!ff||!nombre||!telefono||!email){
+    alert('Completa todos los campos.');
+    return;
+  }
+  if(new Date(ff) <= new Date(fi)){
+    alert('La fecha fin debe ser posterior a la de inicio.');
+    return;
+  }
+
+  const dias = Math.ceil((new Date(ff) - new Date(fi)) / (1000*60*60*24)) + 1;
+  const precioBase = (activeCar && activeCar.precio) ? activeCar.precio : 40;
+  const precioConIVA = (dias * precioBase * 1.21).toFixed(2);
+
+  payload = { name:nombre, telefono, email, fechainicio:fi, fechafin:ff, observaciones:obs, coche, precio:precioConIVA + " €", dias };
+
+  // Mostrar resumen para confirmar
+  confirmResumen.innerHTML = `
+    Ha reservado los días <strong>${fi}</strong> al <strong>${ff}</strong>.<br>
+    Número de días: <strong>${dias}</strong><br>
+    Precio final con IVA incluido: <strong>${precioConIVA} €</strong><br>
+    Vehículo: <strong>${coche}</strong>
+  `;
+  confirmBack.style.display = "flex";
+});
+
+btnCancelarConfirm.addEventListener("click", ()=>{
+  confirmBack.style.display = "none";
+  payload = null;
+});
+
+btnConfirmar.addEventListener("click", ()=>{
+  if(!payload) return;
+  confirmBack.style.display = "none";
+  enviarEmails(payload);
+});
+
+function enviarEmails(data){
+  const msg = document.getElementById("mensajeConfirmacion");
+  msg.style.display = 'block';
+  msg.className = 'msg loading';
+  msg.innerHTML = "⏳ Enviando...";
+
+  // Envío a Carjumotor
+  emailjs.send("service_9uud3ei","template_wjryzug", data)
+    .then(()=>{
+      msg.className = 'msg success';
+      msg.innerHTML = "✅ Reserva enviada a Carjumotor";
+      // Envío al cliente
+      return emailjs.send("service_9uud3ei","template_ieuq4vc", data);
+    })
+    .then(()=>{
+      msg.innerHTML += "<br>✅ Copia enviada al cliente";
+    })
+    .catch(err=>{
+      msg.className = 'msg';
+      msg.style.background = '#fff7ed';
+      msg.style.color = '#9a3412';
+      msg.innerHTML = "❌ Error en el envío: " + (err && err.text ? err.text : JSON.stringify(err));
+    });
+}
+</script>
 </body>
 </html>
