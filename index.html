@@ -344,6 +344,15 @@ pintarCoches();
 let activeCar = null;
 const fechasOcupadas = [];
 
+// Mostrar/ocultar el mensaje de fechas no disponibles dinámicamente
+const box = document.getElementById('fechasNoDisp');
+if (fechasOcupadas.length === 0) {
+  box.style.display = "none";
+} else {
+  box.innerHTML = '<span>Fechas no disponibles:</span> ' + fechasOcupadas.map(f => `<strong>${f}</strong>`).join(', ');
+}
+
+
 function abrirModal(car){
   activeCar = car;
   document.getElementById('modalCar').textContent = car.nombre;
